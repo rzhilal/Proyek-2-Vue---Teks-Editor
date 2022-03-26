@@ -2,9 +2,14 @@
 
 void editorKeyPresses ()
 {
+	char *filename;
+	bool isopen = false;
+	bool isedited = false;
+	char confirm;
+	
 	while(matriks.numrows != MAXR)
 	{
-		while(matriks.numcols < MAXC-1)
+		while(matriks.numcols < MAXC-2)
 		{
 			matriks.teks[matriks.numrows][matriks.numcols] = getch(); //Input langsung dimasukan kedalam matriks
 			
@@ -17,24 +22,18 @@ void editorKeyPresses ()
 					if(matriks.numcols <= 0) //kondisi ketika berada di posisi awal
 					{
 						matriks.numrows--;
-						if(matriks.numrows <= 0)
+						if(matriks.numrows <= 0) // reset limit bawah row berada di 0
 						{
 							matriks.numrows = 0;
 						}
 						matriks.numcols = strlen(matriks.teks[matriks.numrows]) - 1;
+						if(matriks.numcols == -1) // reset limit bawah colom berada di 0
+						{
+							matriks.numcols = 0;
+						}
 						matriks.teks[matriks.numrows][matriks.numcols] = '\0';
 						system("cls");
-						for(int i=0; i<= matriks.numrows;i++)
-						{
-							if(i != matriks.numrows)
-							{
-								printf("%s\n", matriks.teks[i]);
-							}
-							else
-							{
-								printf("%s", matriks.teks[i]);
-							}
-						}
+						editorPrint();
 					}
 					else //kondisi berada ditengah maupun akhir
 					{
@@ -48,6 +47,7 @@ void editorKeyPresses ()
 				else if(matriks.teks[matriks.numrows][matriks.numcols] == 13)
 				{
 					matriks.teks[matriks.numrows][matriks.numcols] = '\0';
+					isedited = true;
 					break;
 				}
 				
@@ -56,25 +56,96 @@ void editorKeyPresses ()
 				/*Ctrl + S (Save ke file)*/
 				else if(matriks.teks[matriks.numrows][matriks.numcols] == 19)
 				{
-					
+					matriks.teks[matriks.numrows][matriks.numcols] = '\0';
+					if(not isopen)
+					{
+						system("cls");
+		 				printf("\n\n\tNama File: ");
+		 				scanf("%s", filename);
+		 				isopen = true;
+		 				system("cls");
+		 				editorPrint();
+					}
+					editorSaveFile(filename);
+					isedited = false;
 				}
 				
 				/*Ctrl + T (Line and Column menu)*/
 				else if(matriks.teks[matriks.numrows][matriks.numcols] == 20)
 				{
-					
+					matriks.teks[matriks.numrows][matriks.numcols] = '\0';
+					curStat();
+					editorPrint();
 				}
 				
 				/*Ctrl + O (Open file) */
 				else if (matriks.teks[matriks.numrows][matriks.numcols] == 15)
 		 		{
-					
+		 			system("cls");
+		 			printf("\n\n\tNama file : ");
+		 			scanf("%s", filename);
+		 			system("cls");
+					editorOpenFile(filename);
+					isopen = true;
+				}
+				
+				/*Ctrl + U (Save As) */
+				else if (matriks.teks[matriks.numrows][matriks.numcols] == 21)
+		 		{ 
+		 			system("cls");
+		 			printf("\n\n\tSimpan sebagai dengan nama : ");
+		 			scanf("%s", filename);
+		 			system("cls");
+					editorSaveFile(filename);
+					isopen = true;
+					isedited = false;
+				}
+				/*Ctrl + E (Help) */
+				else if(matriks.teks[matriks.numrows][matriks.numcols] == 5)
+				{
+					//belum
+				}
+				/*Ctrl + Q (Quit From the program)*/
+				else if (matriks.teks[matriks.numrows][matriks.numcols] == 17)
+				{
+					matriks.teks[matriks.numrows][matriks.numcols] = '\0';
+					if(isopen && !isedited) // ketika file sudah disave isopen dalam keadaan true dan isedited false
+					{
+						exit(0);
+					}
+					else
+					{
+						system("cls");
+						if(isedited)
+						{
+							printf("\n\n\tSave File (Y/N) : ");
+							confirm = getch();
+		 					switch(toupper(confirm))
+		 					{
+		 						case 89 :
+		 							{
+										system("cls");
+		 								printf("\n\n\tNama file : ");
+		 								scanf("%s", filename);
+							 			system("cls");
+										editorSaveFile(filename);
+										exit(0);
+									}
+								default:
+									{
+										exit(0);
+									}
+							}
+						}
+					}
 				}
 			}
-			/*** Handle Standar ***/	
+			/*** Handle Standar ***/
 			else
 			{
-				
+				printf("%c", matriks.teks[matriks.numrows][matriks.numcols]);
+				matriks.numcols++;
+				isedited = true;
 			}
 		}
 		printf("\n");
@@ -83,3 +154,16 @@ void editorKeyPresses ()
 	}
 }
 
+void editorPrint()
+{
+	for(int i = 0; i <= matriks.numrows; ++i)
+	{
+		if(i != matriks.numrows)
+		{
+			printf("%s\n", matriks.teks[i]);
+		}else
+		{
+			printf("%s", matriks.teks[i]);
+		}
+	}
+}
