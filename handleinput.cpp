@@ -3,9 +3,12 @@
 void editorKeyPresses ()
 {
 	char *filename;
+	char kata2[50];
 	bool isopen = false;
 	bool isedited = false;
 	char confirm;
+	
+	tampilan_awal();
 	
 	while(matriks.numrows != MAXR)
 	{
@@ -56,15 +59,17 @@ void editorKeyPresses ()
 				/*Ctrl + S (Save ke file)*/
 				else if(matriks.teks[matriks.numrows][matriks.numcols] == 19)
 				{
-					matriks.teks[matriks.numrows][matriks.numcols] = '\0';
-					editorSaveFile("Bismilah.txt");
+					
 				}
 				
 				/*Ctrl + T (Line and Column menu)*/
 				else if(matriks.teks[matriks.numrows][matriks.numcols] == 20)
 				{
 					matriks.teks[matriks.numrows][matriks.numcols] = '\0';
-					curStat();
+					system("cls");
+					printf("\n\n\tLine : %d || Kolom : %d\n\n", matriks.numrows+1, matriks.numcols+1);
+					system("pause");
+					system("cls");
 					editorPrint();
 				}
 				
@@ -93,7 +98,10 @@ void editorKeyPresses ()
 				/*Ctrl + E (Help) */
 				else if(matriks.teks[matriks.numrows][matriks.numcols] == 5)
 				{
-					//belum
+					matriks.teks[matriks.numrows][matriks.numcols] = '\0';
+					help();
+					system("cls");
+					editorPrint();
 				}
 				/*Ctrl + Q (Quit From the program)*/
 				else if (matriks.teks[matriks.numrows][matriks.numcols] == 17)
@@ -129,7 +137,22 @@ void editorKeyPresses ()
 						}
 					}
 				}
+				/*Ctrl + F (Find)*/
+				else if (matriks.teks[matriks.numrows][matriks.numcols] == 6)
+				{
+					matriks.teks[matriks.numrows][matriks.numcols] = '\0';
+					system("cls");
+					printf("\n\n\tKata yang dicari : ");
+					scanf("%s", kata2);
+					findword(kata2);
+					printf("\n\n\t");
+					system("pause");
+					system("cls");
+					editorPrint();
+					
+				}
 			}
+			
 			/*** Handle Standar ***/
 			else
 			{
