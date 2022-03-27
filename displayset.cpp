@@ -2,8 +2,8 @@
 
 void displaySet()
 {
-	TCHAR szOldTitle[MAX_PATH];
-   	TCHAR szNewTitle[MAX_PATH];
+	TCHAR szOldTitle[MAX_PATH]; // variabel untuk menyimpen judul sebelumnya
+   	TCHAR szNewTitle[MAX_PATH]; //variabel untuk menyimpan judul
    	SMALL_RECT windowSize = {0 , 0 , MAXC , MAXR}; //change the values
     SetConsoleWindowInfo(GetStdHandle(STD_OUTPUT_HANDLE), TRUE, &windowSize);
    	

@@ -2,8 +2,8 @@
 
 void editorKeyPresses ()
 {
-	char *filename;
-	char kata2[50];
+	char *filename; // Menampung nama inputan untuk file
+	char kata2[50]; // Menampung kata dari modul find
 	bool isopen = false;
 	bool isedited = false;
 	char confirm;
@@ -77,10 +77,7 @@ void editorKeyPresses ()
 				else if(matriks.teks[matriks.numrows][matriks.numcols] == 20)
 				{
 					matriks.teks[matriks.numrows][matriks.numcols] = '\0';
-					system("cls");
-					printf("\n\n\tLine : %d || Kolom : %d\n\n", matriks.numrows+1, matriks.numcols+1);
-					system("pause");
-					system("cls");
+					curStat();
 					editorPrint();
 				}
 				
@@ -160,7 +157,6 @@ void editorKeyPresses ()
 					system("pause");
 					system("cls");
 					editorPrint();
-					
 				}
 			}
 			
@@ -180,9 +176,9 @@ void editorKeyPresses ()
 
 void editorPrint()
 {
-	for(int i = 0; i <= matriks.numrows; ++i)
+	for(int i = 0; i <= matriks.numrows; ++i) // perulangan dengan kondisi berakhir ketika i sampai baris sedang di edit
 	{
-		if(i != matriks.numrows)
+		if(i != matriks.numrows) // ketika baris tidak sama dengan yang di edit setiap akhir dari yang di baca baris matriks akan ada end of line
 		{
 			printf("%s\n", matriks.teks[i]);
 		}else
@@ -191,4 +187,70 @@ void editorPrint()
 		}
 	}
 }
+
+void findword(char *word)
+{
+	int row[MAXR]; // yang menyimpan informasi bahwa ada kata di baris itu
+	int j = 0; // indikator yang dijadikan indeks pada array row
+	
+	for (int i = 0; i <= matriks.numrows ; ++i) {
+		if (!strcmp(matriks.teks[i], word)) 
+		{
+			row[j] = i;
+			j++;
+		}
+	}
+	if(j != 0)
+	{
+		printf("\n\n\tBaris ke : ");
+		for(int i = 0; i<j; i++)
+		{
+			printf("%d, ", row[i]+1);
+		}		
+	}else
+	{
+		printf("\n\n\tKata tidak ada");
+	}
+}
+
+void editorSaveFile(char *fname)
+{
+	FILE *fptr = NULL; // pendeklarasian tipe data file
+
+    fptr = fopen(fname, "w+"); // pada variabel fptr kita ingin membuka sebuah dengan mode w+(overwrite)
+    
+    for(int i = 0; i<=matriks.numrows;i++)
+    {
+    	fwrite(matriks.teks[i], sizeof(char), strlen(matriks.teks[i]), fptr);
+		fprintf(fptr, "\n"); // fungsi untuk ngeprint kedalam sebuah file
+	}
+	fclose(fptr);
+}
+
+void editorOpenFile(char *fname)
+{
+	FILE *fptr = NULL; //pendeklarasian tipe data file
+
+    fptr = fopen(fname, "r"); // membuka file dengan nama fname(variabel paramater) dengan mode membaca
+    
+	matriks.numrows = 0; // ngeset pembacaan itu dimulai dan dimasukan ke dalam matriks dari baris ke 0
+	
+	while(fgets(matriks.teks[matriks.numrows], MAXC, fptr)) 
+	{
+        matriks.teks[matriks.numrows][strlen(matriks.teks[matriks.numrows]) - 1] = '\0'; //nilai batas pada kolon dengan '\0'
+        matriks.numrows++; // perpindahan posisi baris
+    }
+	editorPrint(); //procedure menampikan teks yang sudah disimpan pada matriks ke layar 
+    fclose(fptr); 
+}
+
+void curStat()
+{
+	system("cls");
+	printf("\n\n\tLine : %d || Kolom : %d\n\n", matriks.numrows+1, matriks.numcols+1);
+	system("pause");
+	system("cls");
+}
+
+
 

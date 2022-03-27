@@ -1,8 +1,8 @@
 #include "kota.h"
 
 void help(){
-	FILE *data;
-	char help[600];
+	FILE *data; //pendeklarasian tipe data
+	char help[600]; // array yang menyimpan si teks yang dalam file
 	
 	data = fopen("help.txt", "r"); //membuka file dan hanya membacanya saja
 	

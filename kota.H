@@ -41,5 +41,8 @@ void displaySet();
 void help();
 /*menampilkan help atau panduan pengguna*/
 
+void tampilan_awal();
+/*Tampilan awal pada awal run program*/
+
 
 #endif
