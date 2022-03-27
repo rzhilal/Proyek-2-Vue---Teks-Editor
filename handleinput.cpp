@@ -57,17 +57,7 @@ void editorKeyPresses ()
 				else if(matriks.teks[matriks.numrows][matriks.numcols] == 19)
 				{
 					matriks.teks[matriks.numrows][matriks.numcols] = '\0';
-					if(not isopen)
-					{
-						system("cls");
-		 				printf("\n\n\tNama File: ");
-		 				scanf("%s", filename);
-		 				isopen = true;
-		 				system("cls");
-		 				editorPrint();
-					}
-					editorSaveFile(filename);
-					isedited = false;
+					editorSaveFile("Bismilah.txt");
 				}
 				
 				/*Ctrl + T (Line and Column menu)*/
