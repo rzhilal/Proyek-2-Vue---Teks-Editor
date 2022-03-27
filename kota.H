@@ -32,14 +32,11 @@ void editorPrint();
 void curStat();
 /*Procedure untuk menampilkan status dari */
 
-void find();
+void findword(char *word);
 /*Procedure mencari kata dalam array*/
 
-
-void curInteraction();
-/*Procedure berisi program cursor interaction*/
-
 void displaySet();
+/*Procedure berisi program untuk mengatur tampilan pada terminal*/
 
 void help();
 /*menampilkan help atau panduan pengguna*/
