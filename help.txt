@@ -8,7 +8,8 @@
 | CTRL+U = shortcut untuk save as               |                                                    
 | CTRL+R = shortcut untuk help/panduan pengguna |                                                
 | CTRL+Q = shortcut untuk quit/keluar           |                                                     
-| CTRL+F = shortcut untuk find/mencari kata     |
+| CTRL+F = shortcut untuk find/mencari kata	|
+| CTRL+E = shortcut untuk membuka help/panduan  |
 |_______________________________________________|
 |                                               |
 |               - VUE TEXT EDITOR-              |
