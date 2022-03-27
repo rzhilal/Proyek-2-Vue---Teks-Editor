@@ -2,7 +2,16 @@
 
 void editorSaveFile(char *fname)
 {
-	
+	FILE *fptr = NULL;
+
+    fptr = fopen(fname, "w+");
+    
+    for(int i = 0; i<=matriks.numrows;i++)
+    {
+    	fwrite(matriks.teks[i], sizeof(char), strlen(matriks.teks[i]), fptr);
+		fprintf(fptr, "\n");
+	}
+	fclose(fptr);
 }
 
 void editorOpenFile(char *fname)
