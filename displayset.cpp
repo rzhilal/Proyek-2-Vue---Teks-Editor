@@ -4,6 +4,8 @@ void displaySet()
 {
 	TCHAR szOldTitle[MAX_PATH];
    	TCHAR szNewTitle[MAX_PATH];
+   	SMALL_RECT windowSize = {0 , 0 , MAXC , MAXR}; //change the values
+    SetConsoleWindowInfo(GetStdHandle(STD_OUTPUT_HANDLE), TRUE, &windowSize);
    	
    	// Save current console title.
 	
