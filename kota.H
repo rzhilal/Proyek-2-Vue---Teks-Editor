@@ -35,8 +35,6 @@ void curStat();
 void find();
 /*Procedure mencari kata dalam array*/
 
-void replace();
-/*Replace masih progres dalam pengimplementasiannya*/
 
 void curInteraction();
 /*Procedure berisi program cursor interaction*/
