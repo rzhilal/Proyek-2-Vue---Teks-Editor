@@ -1,6 +1,6 @@
 #include "kota.H"
 
-void find(char *word)
+void findword(char *word)
 {
 	int row[MAXR];
 	int j = 0;
