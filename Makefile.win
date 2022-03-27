@@ -4,14 +4,14 @@
 CPP      = g++.exe -D__DEBUG__
 CC       = gcc.exe -D__DEBUG__
 WINDRES  = windres.exe
-OBJ      = main.o handleinput.o
-LINKOBJ  = main.o handleinput.o
+OBJ      = main.o handleinput.o filehandling.o freplace.o displayset.o cursorinteract.o help.o
+LINKOBJ  = main.o handleinput.o filehandling.o freplace.o displayset.o cursorinteract.o help.o
 LIBS     = -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib" -L"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/lib" -static-libgcc -g3
 INCS     = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include"
 CXXINCS  = -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/x86_64-w64-mingw32/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include" -I"C:/Program Files (x86)/Dev-Cpp/MinGW64/lib/gcc/x86_64-w64-mingw32/4.9.2/include/c++"
 BIN      = Project1.exe
-CXXFLAGS = $(CXXINCS) -g3 -g
-CFLAGS   = $(INCS) -g3 -g
+CXXFLAGS = $(CXXINCS) -g3
+CFLAGS   = $(INCS) -g3
 RM       = rm.exe -f
 
 .PHONY: all all-before all-after clean clean-custom
@@ -29,3 +29,18 @@ main.o: main.cpp
 
 handleinput.o: handleinput.cpp
 	$(CPP) -c handleinput.cpp -o handleinput.o $(CXXFLAGS)
+
+filehandling.o: filehandling.cpp
+	$(CPP) -c filehandling.cpp -o filehandling.o $(CXXFLAGS)
+
+freplace.o: freplace.cpp
+	$(CPP) -c freplace.cpp -o freplace.o $(CXXFLAGS)
+
+displayset.o: displayset.cpp
+	$(CPP) -c displayset.cpp -o displayset.o $(CXXFLAGS)
+
+cursorinteract.o: cursorinteract.cpp
+	$(CPP) -c cursorinteract.cpp -o cursorinteract.o $(CXXFLAGS)
+
+help.o: help.cpp
+	$(CPP) -c help.cpp -o help.o $(CXXFLAGS)

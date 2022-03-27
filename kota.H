@@ -43,5 +43,8 @@ void curInteraction();
 
 void displaySet();
 
+void help();
+/*menampilkan help atau panduan pengguna*/
+
 
 #endif
