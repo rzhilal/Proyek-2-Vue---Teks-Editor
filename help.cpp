@@ -1,4 +1,4 @@
-#include "kota.H"
+#include "kota.h"
 
 void help(){
 	FILE *data;
