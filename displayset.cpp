@@ -5,18 +5,14 @@ void displaySet()
 	TCHAR szOldTitle[MAX_PATH]; // variabel untuk menyimpen judul sebelumnya
    	TCHAR szNewTitle[MAX_PATH]; //variabel untuk menyimpan judul
    	SMALL_RECT windowSize = {0 , 0 , MAXC , MAXR}; //change the values
-    SetConsoleWindowInfo(GetStdHandle(STD_OUTPUT_HANDLE), TRUE, &windowSize);
+    SetConsoleWindowInfo(GetStdHandle(STD_OUTPUT_HANDLE), TRUE, &windowSize); //fungsi merubah windowsize
    	
-   	// Save current console title.
 	
-	if( GetConsoleTitle(szOldTitle, MAX_PATH) )
+	if( GetConsoleTitle(szOldTitle, MAX_PATH) ) //fungsi menyimpan judul sebelumnya
 	{
-		// Build new console title string.
+		StringCchPrintf(szNewTitle, MAX_PATH, TEXT("Vue - Text Editor"), szOldTitle); // membuat judul baru
 	
-		StringCchPrintf(szNewTitle, MAX_PATH, TEXT("Vue - Text Editor"), szOldTitle);
-	
-	    // Set console title to new title
-	    if( !SetConsoleTitle(szNewTitle) );
+	    if( !SetConsoleTitle(szNewTitle) ); // fungsi merubah judul ke judul baru
 	}
 }
 

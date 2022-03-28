@@ -180,6 +180,34 @@ void editorKeyPresses ()
 		matriks.numrows++;
 		matriks.numcols = 0;
 	}
+	system("cls");
+	printf("\n\n\n\tBatas dari baris");
+	printf("\n\n\tSave File (Y/N) : ");
+	confirm = getch();
+	switch(toupper(confirm))
+	{
+	case 89 :
+		{
+			if(isopen)
+			{
+				editorSaveFile(filename);
+				exit(0);
+			}else
+			{
+				system("cls");
+		 		printf("\n\n\tNama file : ");
+		 		scanf("%s", filename);
+				system("cls");
+				editorSaveFile(filename);
+				exit(0);	
+			}
+									
+		}
+	default:
+		{
+		exit(0);
+		}
+	}
 }
 
 void editorPrint()
@@ -237,26 +265,26 @@ void editorSaveFile(char *fname)
 
 void editorOpenFile(char *fname) 
 {   
-    FILE *fptr = NULL;
+    FILE *fptr = NULL; // pendeklarasian var bertipe file
 
-    fptr = fopen(fname, "r");
+    fptr = fopen(fname, "r"); // membuka file dengan nama dari parameter dan dibuka dengan mode read
     
-	if( fptr == NULL)
+	if( fptr == NULL) //kondisi jika file tidak ada
 	{
 		printf("\n\n\tFile tidak ada\n\t");
 		system("pause");
 		system("cls");
-	}else
+	}else //kondisi ketika file dapat dibuka
 	{
-		matriks.numrows = 0;
-		while(fgets(matriks.teks[matriks.numrows], MAXC, fptr)) 
+		matriks.numrows = 0; //reset ke 0
+		while(fgets(matriks.teks[matriks.numrows], MAXC, fptr)) // membaca satu baris pada file dan diisi kedalam matriks
 		{
-        	matriks.teks[matriks.numrows][strlen(matriks.teks[matriks.numrows]) - 1] = '\0';
+        	matriks.teks[matriks.numrows][strlen(matriks.teks[matriks.numrows]) - 1] = '\0'; // akhir dari kolom diisi '\0'
         	matriks.numrows++;
     	}
-		editorPrint();
+		editorPrint(); //print teks yang ada di dalam matriks
 	}  
-    fclose(fptr);
+    fclose(fptr); //tutup file
 }
 
 void curStat()
