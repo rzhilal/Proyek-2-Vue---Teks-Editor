@@ -95,6 +95,7 @@ void editorKeyPresses ()
 				/*Ctrl + U (Save As) */
 				else if (matriks.teks[matriks.numrows][matriks.numcols] == 21)
 		 		{ 
+		 			matriks.teks[matriks.numrows][matriks.numcols] = '\0';
 		 			system("cls");
 		 			printf("\n\n\tSimpan sebagai dengan nama : ");
 		 			scanf("%s", filename);
@@ -102,6 +103,7 @@ void editorKeyPresses ()
 					editorSaveFile(filename);
 					isopen = true;
 					isedited = false;
+					editorPrint();
 				}
 				/*Ctrl + E (Help) */
 				else if(matriks.teks[matriks.numrows][matriks.numcols] == 5)
@@ -180,6 +182,8 @@ void editorKeyPresses ()
 		matriks.numrows++;
 		matriks.numcols = 0;
 	}
+	
+	//Program akan langsung masuk ke dalam savefile ketika berada di akhir baris
 	system("cls");
 	printf("\n\n\n\tBatas dari baris");
 	printf("\n\n\tSave File (Y/N) : ");
