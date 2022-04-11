@@ -1,9 +1,9 @@
 #include "kota.H"
 
-//void curStat()
-//{
-//	system("cls");
-//	printf("\n\n\tLine : %d || Kolom : %d\n\n", matriks.numrows+1, matriks.numcols+1);
-//	system("pause");
-//	system("cls");
-//}
+void SetCP(char x, char y)
+{
+	static const HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	fflush(stdin);
+	COORD coord = { (SHORT)x, (SHORT)y };
+	SetConsoleCursorPosition(hOut, coord);
+}

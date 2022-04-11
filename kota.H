@@ -14,6 +14,7 @@ struct
 {
 	int numcols; 
 	int numrows;
+	int endrow;
 	char teks[MAXR][MAXC];
 } matriks;
 
@@ -44,5 +45,8 @@ void help();
 void tampilan_awal();
 /*Tampilan awal pada awal run program*/
 
+void SetCP(char x, char y);
+/*Procedure untuk memindahkan cursor*/
 
 #endif
+

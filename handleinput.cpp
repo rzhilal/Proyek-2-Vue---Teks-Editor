@@ -4,6 +4,8 @@ void editorKeyPresses ()
 {
 	char *filename; // Menampung nama inputan untuk file
 	char kata2[50]; // Menampung kata dari modul find
+	int key;
+	char temp;
 	bool isopen = false;
 	bool isedited = false;
 	char confirm;
@@ -14,10 +16,76 @@ void editorKeyPresses ()
 	{
 		while(matriks.numcols < MAXC-2)
 		{
-			matriks.teks[matriks.numrows][matriks.numcols] = getch(); //Input langsung dimasukan kedalam matriks
+			temp = getch();	
+			key = temp;
+			if(key != -32)
+				matriks.teks[matriks.numrows][matriks.numcols] = temp;
+			
+			//Cursor interaction
+			if(key == -32)
+			{
+				matriks.teks[matriks.numrows][matriks.numcols]=temp;
+				key=getch();
+				switch(key){
+					case 72:
+					{ //up
+						if(matriks.numrows != 0)
+						{
+							matriks.numrows = matriks.numrows - 1;
+							if(matriks.numcols > strlen(matriks.teks[matriks.numrows]) - 1)
+								matriks.numcols = strlen(matriks.teks[matriks.numrows]) - 1;
+							SetCP(matriks.numcols, matriks.numrows);	
+						}
+						break;
+					}
+					case 75:
+					{//left
+						if(matriks.numcols <=0)
+						{
+							matriks.numrows--;
+							if(matriks.numrows <= 0) // reset limit bawah row berada di 0
+							{
+								matriks.numrows = 0;
+							}
+							matriks.numcols = strlen(matriks.teks[matriks.numrows]) - 1;
+							if(matriks.numcols == -1) // reset limit bawah colom berada di 0
+							{
+								matriks.numcols = 0;
+							}
+						}
+						else
+						{
+							matriks.numcols--;	
+						}
+						SetCP(matriks.numcols, matriks.numrows);
+						break;
+					}
+					case 77:{//right
+						if(matriks.numcols<=strlen(matriks.teks[matriks.numrows]) - 1)
+						{
+							matriks.numcols++;
+						}else
+						{
+							matriks.numrows++;
+							matriks.numcols=0;
+						}
+						SetCP(matriks.numcols, matriks.numrows);
+					}
+					case 80:{//down
+						if(matriks.numrows != MAXR)
+						{
+							matriks.numrows++;
+							matriks.numcols = strlen(matriks.teks[matriks.numrows]) - 1;
+							SetCP(matriks.numcols, matriks.numrows);
+						}
+						break;
+					}
+				}
+				key = 0;
+			}
 			
 			/*** Handle non standar (dalam decimal nonstandar input (bernilai kurang dari 31) ***/
-			if(matriks.teks[matriks.numrows][matriks.numcols] <= 31 || matriks.teks[matriks.numrows][matriks.numcols] == 127)
+			else if(matriks.teks[matriks.numrows][matriks.numcols] <= 31 || matriks.teks[matriks.numrows][matriks.numcols] == 127)
 			{
 				/*Handle Backspace*/
 				if (matriks.teks[matriks.numrows][matriks.numcols] == 8)
@@ -34,6 +102,7 @@ void editorKeyPresses ()
 						{
 							matriks.numcols = 0;
 						}
+						matriks.endrow--;
 						matriks.teks[matriks.numrows][matriks.numcols] = '\0';
 						system("cls");
 						editorPrint();
@@ -180,6 +249,7 @@ void editorKeyPresses ()
 		}
 		printf("\n");
 		matriks.numrows++;
+		matriks.endrow++;
 		matriks.numcols = 0;
 	}
 	
@@ -259,7 +329,7 @@ void editorSaveFile(char *fname)
 
     fptr = fopen(fname, "w+"); // pada variabel fptr kita ingin membuka sebuah dengan mode w+(overwrite)
     
-    for(int i = 0; i<=matriks.numrows;i++)
+    for(int i = 0; i<=matriks.endrow;i++)
     {
     	fwrite(matriks.teks[i], sizeof(char), strlen(matriks.teks[i]), fptr);
 		fprintf(fptr, "\n"); // fungsi untuk ngeprint kedalam sebuah file
@@ -298,6 +368,5 @@ void curStat()
 	system("pause");
 	system("cls");
 }
-
 
 
