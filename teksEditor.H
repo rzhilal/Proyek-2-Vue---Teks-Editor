@@ -53,8 +53,6 @@ void DelChar(teks * L, int CurCol, int CurLine);
 
 int getLength(teks L, int CurLine);
 
-COORD GetConsoleCursorPosition(HANDLE hConsoleOutput);
-
 #endif
 
 

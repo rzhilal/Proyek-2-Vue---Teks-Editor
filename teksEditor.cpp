@@ -412,6 +412,7 @@ void editorKeyProses()
 	
 	int CurrentLine = 1;
 	int CurrentCollumns = 1;
+	int temp_int;
 	address Position;
 	
 	char temp;
@@ -422,6 +423,7 @@ void editorKeyProses()
 	while(1)
 	{
 		refreshScreen(teksEditor, CurrentLine, CurrentCollumns);
+		SetCP(CurrentCollumns-1, CurrentLine+2);
 		temp=getch();
 		key = temp;
 		
@@ -430,8 +432,22 @@ void editorKeyProses()
 			key=getch();
 				switch(key)
 				{
-					
-					
+					case 72:
+						{//up
+							//program untuk memindahkan posisi cursor kearah atas
+						}
+					case 75:
+						{//left
+							//program untuk memindahkan posisi cursor kearah kiri
+						}
+					case 77:
+						{//right
+							//program untuk memindahkan posisi cursor kearah kanan
+						}
+					case 80:
+						{//down
+							//program untuk memindahkan posisi cursor kearah bawah
+						}
 				}
 		}
 		
@@ -535,6 +551,7 @@ int getLength(teks L, int CurLine)
 		count = 0;
 	return count;
 }
+<<<<<<< Updated upstream
 
 void help(){
 	FILE *data;
@@ -554,3 +571,5 @@ void help(){
 	menu();
 }
 
+=======
+>>>>>>> Stashed changes
