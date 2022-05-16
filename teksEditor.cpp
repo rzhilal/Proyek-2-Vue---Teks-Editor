@@ -521,21 +521,6 @@ void refreshScreen(teks L, int line, int collumns)
 	}
 }
 
-COORD GetConsoleCursorPosition(HANDLE hConsoleOutput)
-{
-    CONSOLE_SCREEN_BUFFER_INFO cbsi;
-    if (GetConsoleScreenBufferInfo(hConsoleOutput, &cbsi))
-    {
-        return cbsi.dwCursorPosition;
-    }
-    else
-    {
-        // The function failed. Call GetLastError() for details.
-        COORD invalid = { 0, 0 };
-        return invalid;
-    }
-}
-
 int getLength(teks L, int CurLine)
 {
 	address pos = First(L);
@@ -551,7 +536,6 @@ int getLength(teks L, int CurLine)
 		count = 0;
 	return count;
 }
-<<<<<<< Updated upstream
 
 void help(){
 	FILE *data;
@@ -568,8 +552,4 @@ void help(){
 	printf("\n\t");
 	fclose(data);
 	system("pause");
-	menu();
 }
-
-=======
->>>>>>> Stashed changes
