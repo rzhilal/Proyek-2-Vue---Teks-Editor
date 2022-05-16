@@ -53,6 +53,12 @@ void DelChar(teks * L, int CurCol, int CurLine);
 
 int getLength(teks L, int CurLine);
 
+void help();
+
+void SetCP(char x, char y);
+
+int getMaxRow(teks L);
+
 #endif
 
 
