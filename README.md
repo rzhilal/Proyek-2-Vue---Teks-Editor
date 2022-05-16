@@ -4,9 +4,9 @@ Repository ini berisi tentang pembuatan teks editor Kelompok 3 - Vue  dalam penu
 
 Kelompok 3 - Vue :
 
-Jeremia Haposan Simarmatha (211511040)
-Mochamad Hafidh Dwyanto (211511043)
-Rezky Azhar Aditya (211511055)
-Rizq Hilal Rifaasya (211511058)
-Salman Alfarisi (211511059)
-Zahratul Mardiyah (211511064)
+-Jeremia Haposan Simarmatha (211511040)
+-Mochamad Hafidh Dwyanto (211511043)
+-Rezky Azhar Aditya (211511055)
+-Rizq Hilal Rifaasya (211511058)
+-Salman Alfarisi (211511059)
+-Zahratul Mardiyah (211511064)
