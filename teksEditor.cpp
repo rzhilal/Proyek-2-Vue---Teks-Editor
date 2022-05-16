@@ -536,3 +536,21 @@ int getLength(teks L, int CurLine)
 	return count;
 }
 
+void help(){
+	FILE *data;
+	char help[600];
+	
+	data = fopen("help.txt", "r");
+	
+	system("cls");
+	while(!feof(data)){
+		fgets(help, sizeof(help), data);
+		printf("%s", help;
+	}
+	
+	printf("\n\t");
+	fclose(data);
+	system("pause");
+	menu();
+}
+
