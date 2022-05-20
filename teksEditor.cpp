@@ -160,10 +160,11 @@ void InsertChar (teks * L, address New, int CurCol, int CurLine)
 			
 			while(above != Nil || move!=Nil)
 			{
-				if(Next(above) != Nil)
+				if(above != Nil)
 				{
 					above = Next(above);
-					Down(above) = move;	
+					if(above != Nil)
+						Down(above) = move;	
 				}else
 					above = Nil;
 				if(move != Nil)
@@ -175,10 +176,11 @@ void InsertChar (teks * L, address New, int CurCol, int CurLine)
 			move = New;
 			while(below != Nil || move!=Nil)
 			{
-				if(Next(below) != Nil)
+				if(below != Nil)
 				{
 					below = Next(below);
-					Up(below) = move;	
+					if(below != Nil)
+						Up(below) = move;	
 				}else
 					below = Nil;
 				if(move != Nil)
@@ -189,15 +191,16 @@ void InsertChar (teks * L, address New, int CurCol, int CurLine)
 			}
 		}
 			
-		else // karakter di insert di awal ketika berada di kolom 1
+		else // karakter di insert di awal ketika berada di kolom 1 // masih error
 		{
 			Next(New) = pos;
 			Prev(pos) = New;
 			
 			while(above != Nil || move!=Nil)
 			{
-				if(Next(above) != Nil)
+				if(above != Nil)
 				{
+					above = Next(above);
 					Down(above) = move;	
 					above = Next(above);
 				}else
@@ -212,7 +215,7 @@ void InsertChar (teks * L, address New, int CurCol, int CurLine)
 			move = New;
 			while(below != Nil || move!=Nil)
 			{
-				if(Next(below) != Nil)
+				if(below != Nil)
 				{
 					Up(below) = move;
 					below = Next(below);
@@ -224,6 +227,9 @@ void InsertChar (teks * L, address New, int CurCol, int CurLine)
 					move = Next(move);
 				}
 			}
+			
+			if(pos == First(*L))
+				First(*L) = New;
 		}
 	}
 }
@@ -455,7 +461,7 @@ void editorKeyProses()
 								if(CurrentLine-1 != 0) //kondisi ketika bukan berada di baris 1
 								{
 									CurrentLine--;
-									CurrentCollumns = getLength(teksEditor, CurrentLine);
+									CurrentCollumns = getLength(teksEditor, CurrentLine)+1;
 								}else //kondisi ketika berada di baris 1
 								{
 									CurrentCollumns = 1;
@@ -467,14 +473,14 @@ void editorKeyProses()
 						{//right
 							//program untuk memindahkan posisi cursor kearah kanan
 							CurrentCollumns++;
-							temp_int = getLength(teksEditor, CurrentLine);
+							temp_int = getLength(teksEditor, CurrentLine)+1;
 							if(CurrentCollumns > getLength(teksEditor, CurrentLine))
 							{
 								CurrentLine++;
 								if(CurrentLine > getMaxRow(teksEditor))
 								{
 									CurrentLine--;
-									CurrentCollumns--;
+									CurrentCollumns = getLength(teksEditor, CurrentLine)+1;
 								}
 								else
 									CurrentCollumns = 1;
