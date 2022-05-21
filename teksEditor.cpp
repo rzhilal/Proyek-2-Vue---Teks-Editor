@@ -49,7 +49,6 @@ void InsertFirstRow (teks * L, address P)
 
 void InsertNewLine(teks * L, int CurLine, int CurCol)
 {
-	CurCol++;
 	address above, below, rec_up, rec_down, rec_pos, move;
 	
 	address pos = First(*L);
@@ -79,11 +78,30 @@ void InsertNewLine(teks * L, int CurLine, int CurCol)
 		{
 			if(CurLine == 1) //kondisi ketika insert new line di first list
 			{
-				
+				Up(pos) = P;
+				Down(P) = pos;
+				First(*L) = P;
 			}
 			else
 			{
+				Down(rec_up) = P;
+				Up(P) = rec_up;
+				Up(rec_pos) = P;
+				Down(P) = rec_pos;
 				
+				rec_pos = Next(rec_pos);
+				rec_up = Next(rec_up);
+				
+				while(rec_up != Nil)
+				{
+					Down(rec_up) = Nil;
+					rec_up = Next(rec_up);
+				}
+				while(rec_pos != Nil)
+				{
+					Up(rec_pos) = Nil;
+					rec_pos = Next(rec_pos);
+				}
 			}
 		}
 		else //kondisi berada di tengah atau akhir
@@ -148,16 +166,36 @@ void InsertNewLine(teks * L, int CurLine, int CurCol)
 						rec_down = Next(rec_down);
 					}
 				}
-				
-				while(above != Nil)
-				{
-					Down(above) = Nil;
-					above = Next(above);
-				}
 			}
 			else //kondisi di akhir
 			{
-				
+				if(rec_down == Nil) // akhir baris
+				{
+					Down(rec_pos) = P;
+					Up(P) = rec_pos;
+				}
+				else
+				{
+					Down(rec_pos) = P;
+					Up(P) = rec_pos;
+					Up(rec_down) = P;
+					Down(P) = rec_down;
+					
+					rec_down = Next(rec_down);
+					rec_pos = Next(rec_pos);
+					
+					while(rec_down != Nil)
+					{
+						Up(rec_down) = Nil;
+						rec_down = Next(rec_down);
+					}
+					
+					while(rec_pos != Nil)
+					{
+						Down(rec_pos) = Nil;
+						rec_pos = Next(rec_pos);
+					}
+				}
 			}
 		}
 	}
