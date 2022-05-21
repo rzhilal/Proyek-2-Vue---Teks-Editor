@@ -47,41 +47,118 @@ void InsertFirstRow (teks * L, address P)
 	}
 }
 
-void InsertNewLine(teks * L, int CurLine)
+void InsertNewLine(teks * L, int CurLine, int CurCol)
 {
-	address above, below;
+	CurCol++;
+	address above, below, rec_up, rec_down, rec_pos, move;
 	
 	address pos = First(*L);
 	address P = Alokasi('\0');
 	
+	above = Nil;
+	below = Nil;
+	
 	if(P != Nil)
 	{
-		for(int i=1; i<CurLine; i++)
+		for(int i=1; i<CurLine;i++)
 			pos = Down(pos);
 		
-		above = pos;
+		rec_up = Up(pos);
+		rec_down = Down(pos);
+		rec_pos = pos;
+		
+		for(int i=1; i<CurCol-1;i++)
+			pos = Next(pos);
+		
+		move = pos;
+		
+		above = Up(pos);
 		below = Down(pos);
 		
-		Up(P) = above;
-		if(above != Nil)
-			Down(above) = P;
-		                
-		Down(P) = below;
-		if(below != Nil)
-			Up(below) = P;
-			
-		while(above != Nil)
+		if(CurCol == 1) //kondisi ketika berada di awal
 		{
-			above = Next(above);
-			if(above != Nil)
-				Down(above) = Nil;
-		} 
-		
-		while(below!=Nil)
-		{                
-			below = Next(below);
-			if(below != Nil)
-				Up(below) = Nil;
+			if(CurLine == 1) //kondisi ketika insert new line di first list
+			{
+				
+			}
+			else
+			{
+				
+			}
+		}
+		else //kondisi berada di tengah atau akhir
+		{
+			if(Next(pos) != Nil) //kondisi di tengah
+			{
+				if(Prev(pos) != Nil)
+					Next(Prev(pos)) = Nil;
+				Prev(pos) = Nil;
+				 
+				Down(rec_pos) = pos;
+				Up(pos) = rec_pos;
+				
+				if(rec_down != Nil)
+				{
+					Up(rec_down) = pos;
+					Down(pos) = rec_down;
+				}
+				
+				while(rec_pos != Nil || move != Nil)
+				{
+					if(rec_pos != Nil && move == Nil )
+					{
+						Down(rec_pos) = Nil;
+						rec_pos = Next(rec_pos);
+					}
+					else if(rec_pos == Nil && move != Nil )
+					{
+						Up(move) = Nil;
+						move = Next(move);
+					}
+					else
+					{
+						Up(move) = rec_pos;
+						Down(rec_pos) = move;
+						
+						move = Next(move);
+						rec_pos = Next(rec_pos);
+					}
+				}
+				
+				move = pos;
+				
+				while(rec_down != Nil || move != Nil)
+				{
+					if(rec_down != Nil && move == Nil )
+					{
+						Up(rec_down) = Nil;
+						rec_down = Next(rec_down);
+					}
+					else if(rec_down == Nil && move != Nil )
+					{
+						Down(move) = Nil;
+						move = Next(move);
+					}
+					else
+					{
+						Down(move) = rec_down;
+						Down(rec_down) = move;
+						
+						move = Next(move);
+						rec_down = Next(rec_down);
+					}
+				}
+				
+				while(above != Nil)
+				{
+					Down(above) = Nil;
+					above = Next(above);
+				}
+			}
+			else //kondisi di akhir
+			{
+				
+			}
 		}
 	}
 }
@@ -189,8 +266,7 @@ void InsertChar (teks * L, address New, int CurCol, int CurLine)
 					move = Next(move);
 				}
 			}
-		}
-			
+		}		
 		else // karakter di insert di awal ketika berada di kolom 1 // masih error
 		{
 			Next(New) = pos;
@@ -200,17 +276,15 @@ void InsertChar (teks * L, address New, int CurCol, int CurLine)
 			{
 				if(above != Nil)
 				{
-					above = Next(above);
-					Down(above) = move;	
-					above = Next(above);
-				}else
-					above = Nil;
-				
+					Down(above) = move;
+					if(move != Nil)
+						Up(move) = above;
+					above = Next(above);	
+				}
 				if(move != Nil)
 				{
-					Up(move) = above;
 					move = Next(move);
-				}	
+				}
 			}
 			move = New;
 			while(below != Nil || move!=Nil)
@@ -218,12 +292,12 @@ void InsertChar (teks * L, address New, int CurCol, int CurLine)
 				if(below != Nil)
 				{
 					Up(below) = move;
-					below = Next(below);
-				}else
-					below = Nil;
+					if(move != Nil)
+						Down(move) = below;
+					below = Next(below);	
+				}
 				if(move != Nil)
 				{
-					Down(move) = below;
 					move = Next(move);
 				}
 			}
@@ -246,15 +320,20 @@ void InsVChar (teks * L, infotype X, int CurCol, int CurLine)
 void DelChar(teks * L, int CurCol, int CurLine)
 {
 	address pos = First(*L);
-	address below, above, move;
+	address below, above, move, rec_up, rec_down;
 	
 	for(int i=1; i<CurLine;i++)
 			pos = Down(pos);
+	
+	rec_down = Down(pos);
+	rec_up = Up(pos);
+	
 	for(int i=1; i<CurCol-1;i++)
 		pos = Next(pos);
 	
 	above = Up(pos);
 	below = Down(pos);
+	
 	
 	if(CurCol == 1 && CurLine != 1) // kondisi ketika deletion berada di awal
 	{
@@ -280,28 +359,24 @@ void DelChar(teks * L, int CurCol, int CurLine)
 			}	
 			
 			move = Up(move);
-			if(move != Nil) // ketika atas above menunjuk pada baris atas
-			{
-				move = Next(move);
-				while(move != Nil || pos != Nil)
+			
+			if(rec_up != Nil) // ketika atas above menunjuk pada baris atas
+			{	
+				while (rec_up != Nil || rec_down != Nil)
 				{
-					if(move == Nil && pos != Nil)
+					if(rec_up != Nil && rec_down == Nil)
 					{
-						Up(pos) = Nil;
-						pos = Next(pos);
-					}	
-					else if (move != Nil && pos == Nil)
+						Down(rec_up) = Nil;
+						rec_up = Next(rec_up);
+					}
+					else if (rec_up == Nil && rec_down != Nil)
 					{
-						Down(move) = Nil;
-						move = Next(move);
-					} 
-					else
+						Up(rec_down) = Nil;
+						rec_down = Next(rec_down);
+					}else
 					{
-						Up(pos) = move;
-						Down(move) = pos;
-						
-						pos = Next(pos);
-						move = Next(move);
+						Down(rec_up) = rec_down;
+						Up(rec_down) = rec_up;
 					}
 				}
 			}
@@ -354,13 +429,14 @@ void DelChar(teks * L, int CurCol, int CurLine)
 			
 			DeAlokasi(&pos); 
 		}
-		else if(Next(pos) != Nil)
+		else if(Next(pos) != Nil) //node yang dihapus diantara
 		{
 			Next(Prev(pos)) = Next(pos);
 			Prev(Next(pos)) = Prev(pos);
 			
 			move = Next(pos);
-			above = Next(above);
+			if(above != Nil)
+				above = Next(above);
 			
 			while(above != Nil && move != Nil)
 			{
@@ -474,7 +550,7 @@ void editorKeyProses()
 							//program untuk memindahkan posisi cursor kearah kanan
 							CurrentCollumns++;
 							temp_int = getLength(teksEditor, CurrentLine)+1;
-							if(CurrentCollumns > getLength(teksEditor, CurrentLine))
+							if(CurrentCollumns > getLength(teksEditor, CurrentLine)+1)
 							{
 								CurrentLine++;
 								if(CurrentLine > getMaxRow(teksEditor))
@@ -526,7 +602,7 @@ void editorKeyProses()
 			/***Handle Enter***/                     
 			else if(key == 13)
 			{
-				InsertNewLine(&teksEditor, CurrentLine);
+				InsertNewLine(&teksEditor, CurrentLine, CurrentCollumns);
 				CurrentLine++;
 				CurrentCollumns = 1;
 			}
