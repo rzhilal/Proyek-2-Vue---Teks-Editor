@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <conio.h>
 #include <windows.h>
+#include <stdlib.h>
 #define Nil NULL
 
 #define Info(P) (P)->info
@@ -58,6 +59,8 @@ void help();
 void SetCP(char x, char y);
 
 int getMaxRow(teks L);
+
+void editorSaveFile(char *fname, teks L);
 
 #endif
 

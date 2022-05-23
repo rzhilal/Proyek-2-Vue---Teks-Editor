@@ -106,68 +106,72 @@ void InsertNewLine(teks * L, int CurLine, int CurCol)
 		}
 		else //kondisi berada di tengah atau akhir
 		{
-			if(Next(pos) != Nil) //kondisi di tengah
-			{
-				if(Prev(pos) != Nil)
-					Next(Prev(pos)) = Nil;
-				Prev(pos) = Nil;
-				 
-				Down(rec_pos) = pos;
-				Up(pos) = rec_pos;
+			if(Next(pos) != Nil) //kondisi di tengah (error)
+			{	
+				pos = Next(pos);
+				above = Up(pos);
+				below = Down(pos);
+				move = pos;
 				
-				if(rec_down != Nil)
+				while(above != Nil)
 				{
-					Up(rec_down) = pos;
-					Down(pos) = rec_down;
+					Down(above) = Nil;
+					above = Next(above);
 				}
 				
-				while(rec_pos != Nil || move != Nil)
+				Next(Prev(pos)) = Nil;
+				Prev(pos) = Nil;
+				
+				Up(move) = rec_pos;
+				Down(rec_pos) = move;
+				
+				while(move != Nil || rec_pos != Nil)
 				{
-					if(rec_pos != Nil && move == Nil )
+					if(rec_pos != Nil && move == Nil)
 					{
 						Down(rec_pos) = Nil;
 						rec_pos = Next(rec_pos);
 					}
-					else if(rec_pos == Nil && move != Nil )
+					else if (rec_pos == Nil && move != Nil)
 					{
 						Up(move) = Nil;
 						move = Next(move);
 					}
 					else
 					{
-						Up(move) = rec_pos;
 						Down(rec_pos) = move;
+						Up(move) = rec_pos;
 						
-						move = Next(move);
 						rec_pos = Next(rec_pos);
+						move = Next(move);
 					}
 				}
-				
 				move = pos;
 				
-				while(rec_down != Nil || move != Nil)
+				while(move != Nil || rec_down != Nil)
 				{
-					if(rec_down != Nil && move == Nil )
+					if(rec_down != Nil && move == Nil)
 					{
 						Up(rec_down) = Nil;
 						rec_down = Next(rec_down);
 					}
-					else if(rec_down == Nil && move != Nil )
+					else if (rec_down == Nil && move != Nil)
 					{
 						Down(move) = Nil;
 						move = Next(move);
 					}
 					else
 					{
+						Up(rec_down) = move;
 						Down(move) = rec_down;
-						Down(rec_down) = move;
 						
-						move = Next(move);
 						rec_down = Next(rec_down);
+						move = Next(move);
 					}
 				}
+				DeAlokasi(&P);
 			}
-			else //kondisi di akhir
+			else
 			{
 				if(rec_down == Nil) // akhir baris
 				{
@@ -358,77 +362,57 @@ void InsVChar (teks * L, infotype X, int CurCol, int CurLine)
 void DelChar(teks * L, int CurCol, int CurLine)
 {
 	address pos = First(*L);
-	address below, above, move, rec_up, rec_down;
+	address below, above, move, rec_up, rec_down, rec_pos;
 	
 	for(int i=1; i<CurLine;i++)
 			pos = Down(pos);
 	
 	rec_down = Down(pos);
+	rec_pos = pos;
 	rec_up = Up(pos);
 	
 	for(int i=1; i<CurCol-1;i++)
 		pos = Next(pos);
 	
 	above = Up(pos);
-	below = Down(pos);
+	below = Down(pos); 
 	
 	
 	if(CurCol == 1 && CurLine != 1) // kondisi ketika deletion berada di awal
 	{
 		if(Info(pos) != Nil) // ketika baris ada isi
 		{	
-			move = above;
-			while (Next(move) != Nil) // menuju last node pada baris atas
-				move = Next(move);
+			move = rec_up;
 			
-			// menyambungkan baris pos dengan atasnya
-			if(Info(move) == Nil) // baris atas hanya insert line
+			while(Next(move) != Nil && Info(move) != Nil)
+				move = Next(move);	
+	
+			Next(move) = pos;
+			Prev(pos) = move;
+						
+			while(rec_up != Nil || rec_down != Nil)
 			{
-				Info(move) = Info(pos);
-				Next(move) = Next(pos);
-				Prev(Next(pos)) = move;
-				DeAlokasi(&pos);
-				pos = Next(move);
-			}
-			else // baris atas ada isi
-			{
-				Next(move) = pos; 
-				Prev(pos) = move;
-			}	
-			
-			move = Up(move);
-			
-			if(rec_up != Nil) // ketika atas above menunjuk pada baris atas
-			{	
-				while (rec_up != Nil || rec_down != Nil)
+				if(rec_up != Nil && rec_down == Nil)
 				{
-					if(rec_up != Nil && rec_down == Nil)
-					{
-						Down(rec_up) = Nil;
-						rec_up = Next(rec_up);
-					}
-					else if (rec_up == Nil && rec_down != Nil)
-					{
-						Up(rec_down) = Nil;
-						rec_down = Next(rec_down);
-					}else
-					{
-						Down(rec_up) = rec_down;
-						Up(rec_down) = rec_up;
-					}
+					Down(rec_up) = Nil;
+					rec_up = Next(rec_up);
 				}
-			}
-			else // ketika tidak ada karakter pada baris di atas above
-			{
-				Up(pos) = Nil;
-				while(Next(pos) != Nil)
+				else if(rec_up == Nil  && rec_down != Nil)
 				{
-					pos = Next(pos);
-					Up(pos) = Nil;
+					Up(rec_down) = Nil;
+					rec_down = Next(rec_down);
+				}
+				else
+				{
+					Down(rec_up) = rec_down;
+					Up(rec_down) = rec_up;
+					
+					rec_up = Next(rec_up);
+					rec_down = Next(rec_down);
 				}
 			}
 		}
-		else // ketika yang baris yang dihapus baru insert line saja
+		else // ketika baris yang dihapus baru insert line saja
 		{
 			while(above != Nil || below != Nil)
 			{
@@ -444,6 +428,7 @@ void DelChar(teks * L, int CurCol, int CurLine)
 				{
 					Down(above) = below;
 					Up(below) = above;
+					
 					above = Next(above);
 					below = Next(below);
 				}
@@ -455,6 +440,7 @@ void DelChar(teks * L, int CurCol, int CurLine)
 	{
 		if(Next(pos) == Nil && Prev(pos) == Nil) // menjadi hanya line kosong
 			Info(pos) = '\0';
+		
 		else if(Next(pos) == Nil && Prev(pos) != Nil ) // node yang dihapus berada di akhir
 		{
 			if(above != Nil)
@@ -464,63 +450,61 @@ void DelChar(teks * L, int CurCol, int CurLine)
 			
 			Next(Prev(pos)) = Nil;
 			
-			
 			DeAlokasi(&pos); 
 		}
+		
 		else if(Next(pos) != Nil) //node yang dihapus diantara
 		{
-			Next(Prev(pos)) = Next(pos);
-			Prev(Next(pos)) = Prev(pos);
-			
 			move = Next(pos);
-			if(above != Nil)
-				above = Next(above);
 			
-			while(above != Nil && move != Nil)
+			if(CurCol != 2)
+				Next(Prev(pos)) = move;
+			
+			while(above != Nil || move != Nil)
 			{
 				if(above != Nil && move == Nil)
 				{
 					Down(above) = Nil;
 					above = Next(above);
 				}
-				else if(above == Nil && move != Nil)
+				else if(above == Nil || move != Nil)
 				{
 					Up(move) = Nil;
 					move = Next(move);
 				}
 				else
 				{
-					Up(move) = above;
 					Down(above) = move;
+					Up(move) = above;
 					
 					above = Next(above);
 					move = Next(move);
 				}
 			}
+			move = Next(pos);
 			
-			move = pos;
-			
-			while(below != Nil && move != Nil)
+			while(below != Nil || move != Nil)
 			{
 				if(below != Nil && move == Nil)
 				{
 					Up(below) = Nil;
 					below = Next(below);
 				}
-				else if(below == Nil && move != Nil)
+				else if(below == Nil || move != Nil)
 				{
 					Down(move) = Nil;
 					move = Next(move);
 				}
 				else
 				{
-					Down(move) = below;
 					Up(below) = move;
+					Down(move) = below;
 					
 					below = Next(below);
 					move = Next(move);
-				}
+				}	
 			}
+		DeAlokasi(&pos);
 		}
 	}
 }
@@ -648,6 +632,7 @@ void editorKeyProses()
 			/*Ctrl + Q (Quit shortcut)*/
 			else if(key == 17)
 			{
+//				editorSaveFile("Bismillah.txt", teksEditor);
 				exit(0);
 			}
 		}
@@ -703,8 +688,8 @@ int getLength(teks L, int CurLine)
 	return count;
 }
 
-
-void help(){
+void help()
+{
 	FILE *data;
 	char help[600];
 	
@@ -740,3 +725,4 @@ int getMaxRow(teks L)
 			
 	return count;
 }
+
