@@ -716,6 +716,22 @@ void refreshTeks_scrolling(teks L, int max_line, int max_collumns)
 	
 }
 
+void refreshBlank(teks L, int min_line)
+{
+	int temp;
+	SetCP(2,0);
+	for(int i = 0; i < 26;i++)
+	{
+		temp = getLength(L, min_line);
+		for(int j = 0; j< temp; j++)
+		{
+			printf(" ");
+		}
+		printf("\n");
+		min_line++;
+	}
+}
+
 int getLength(teks L, int CurLine)
 {
 	address pos = First(L);

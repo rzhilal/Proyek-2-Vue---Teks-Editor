@@ -50,6 +50,12 @@ void editorKeyProses();
 
 void refreshScreen(teks L, int line, int collumns);
 
+void refreshTeks_scrolling(teks L, int max_line, int max_collumns);
+
+void refreshBlank(teks L, int min_line);
+
+void refreshScreen(teks L, int line, int collumns);
+
 void DelChar(teks * L, int CurCol, int CurLine);
 
 int getLength(teks L, int CurLine);
