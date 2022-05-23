@@ -657,8 +657,12 @@ void refreshScreen(teks L, int line, int collumns)
 	move = pos;
 	
 	printf("File (Ctrl+Tab) | Help (Ctrl+H)\n");
+	
+	SetCP(0, 29);
 	printf("Line : %d | Collumns : %d\n\n", line, collumns);
 	
+	SetCP(0,0);
+	SetCP(0,2);
 	while(pos != Nil)
 	{
 		printf("%c", Info(pos));
@@ -674,6 +678,8 @@ void refreshScreen(teks L, int line, int collumns)
 			if(pos != Nil)
 				printf("\n");
 	}
+	
+	
 }
 
 int getLength(teks L, int CurLine)
