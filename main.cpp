@@ -6,6 +6,7 @@
 
 int main(int argc, char** argv) {
 	
+	tampilan_awal();
 	editorKeyProses();
 	
 	return 0;

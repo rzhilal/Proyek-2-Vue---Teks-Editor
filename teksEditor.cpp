@@ -726,3 +726,12 @@ int getMaxRow(teks L)
 	return count;
 }
 
+void tampilan_awal()
+{
+	printf("\n\n\n\n\n\n\n\n\t\t\tWELCOME TO VUE - TEKS EDITOR");
+	printf("\n\n\n\n\n\n\n\n\n\n\n\n");
+	system("pause");
+	help();
+	system("cls");
+}
+

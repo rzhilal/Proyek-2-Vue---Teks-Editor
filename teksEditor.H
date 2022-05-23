@@ -58,6 +58,8 @@ void help();
 
 void SetCP(char x, char y);
 
+void tampilan_awal();
+
 int getMaxRow(teks L);
 
 void editorSaveFile(char *fname, teks L);
