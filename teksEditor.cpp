@@ -735,3 +735,28 @@ void tampilan_awal()
 	system("cls");
 }
 
+void editorSaveFile(char *fname, teks L)
+{
+	address rec, pos;
+	rec = First(L);
+	pos = rec;
+	
+	FILE *fptr = NULL; // pendeklarasian tipe data file
+
+    fptr = fopen(fname, "w+"); // pada variabel fptr kita ingin membuka sebuah file dengan mode w+(overwrite)
+    
+    while(rec != Nil)
+    {
+    	while(pos != Nil)
+    	{
+    		fprintf(fptr, "%c", Info(pos));
+    		pos = Next(pos);
+		}
+		rec = Down(rec);
+		pos = rec;
+		if(rec != Nil)
+			fprintf(fptr, "\n");
+	}
+	fclose(fptr);
+}
+
