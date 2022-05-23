@@ -682,6 +682,40 @@ void refreshScreen(teks L, int line, int collumns)
 	
 }
 
+void refreshTeks_scrolling(teks L, int max_line, int max_collumns)
+{
+	int min_line = max_line - 26;
+	int min_collumns = max_collumns - 121;
+	
+	address pos, move;
+	
+	pos = First(L);
+	move = pos;
+	
+	SetCP(2, 0);
+	
+	if( min_line > 26 )
+	{
+		min_line = min_line - 26;
+	}
+	
+	for(int i = 0; i< min_line - 1; i++)
+		pos = Down(pos);
+	
+	move = pos;
+	
+	if( min_collumns > 121 )
+	{
+		min_collumns = max_collumns - 121;
+	}
+	
+	for(int i = 0; i<26;i++)
+	{
+		
+	}
+	
+}
+
 int getLength(teks L, int CurLine)
 {
 	address pos = First(L);
