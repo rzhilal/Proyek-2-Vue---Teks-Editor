@@ -632,8 +632,12 @@ void editorKeyProses()
 			/*Ctrl + Q (Quit shortcut)*/
 			else if(key == 17)
 			{
-//				editorSaveFile("Bismillah.txt", teksEditor);
+				editorSaveFile("Bismillah.txt", teksEditor);
 				exit(0);
+			}
+			else if(key == 15)
+			{
+				openFile("Bismillah.txt", &teksEditor);
 			}
 		}
 		else if (key <= 126)// printing character
@@ -758,5 +762,44 @@ void editorSaveFile(char *fname, teks L)
 			fprintf(fptr, "\n");
 	}
 	fclose(fptr);
+}
+
+void openFile(char *fname, teks *L)
+{
+	FILE *data;
+	char *temp;
+	infotype temp_char;
+	address P;
+	int j,k; //indikator baris dan kolom (j : kolom, k : baris)
+	k = 1;
+	
+	data = fopen(fname, "r");
+	
+	while(!feof(data))
+	{
+		fgets(temp, sizeof(temp), data);
+		for(int i = 0; i<sizeof(temp); i++)
+		{
+			j = 1;
+			temp_char = temp[i];
+			P = Alokasi(temp_char);
+			InsertChar(&(*L), P, j, k);
+			j++;
+		}
+		resetArr(temp, sizeof(temp));
+		InsertNewLine(&(*L), k, sizeof(temp));
+		k++;
+	}
+	
+	fclose(data);
+}
+
+void resetArr(char *Arr, int size)
+{
+	int i;
+	for(i=0; i<size; i++);
+	{
+		Arr[i] = NULL;
+	}
 }
 

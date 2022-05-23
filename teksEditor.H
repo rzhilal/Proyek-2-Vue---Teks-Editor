@@ -64,6 +64,10 @@ int getMaxRow(teks L);
 
 void editorSaveFile(char *fname, teks L);
 
+void openFile(char *fname, teks *L);
+
+void resetArr(char *Arr, int size);
+
 #endif
 
 
