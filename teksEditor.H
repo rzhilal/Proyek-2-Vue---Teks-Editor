@@ -74,6 +74,11 @@ void openFile(char *fname, teks *L, int *col, int *line);
 
 void resetArr(char *Arr, int size);
 
+int getMaxLength(teks L);
+
+void tampilan(int line, int collumns);
+
+bool EnableVTMode();
 #endif
 
 
