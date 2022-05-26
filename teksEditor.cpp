@@ -650,14 +650,19 @@ void editorKeyProses()
 
 void refreshScreen(teks L, int line, int collumns)
 {
-	refreshBlank();
-	
+	system("cls");
 	address pos, move;
 	
 	pos = First(L);
 	move = pos;
 	
-	printf(CSI "?25l"); //hide the cursor
+	printf("File (Ctrl+Tab) | Help (Ctrl+H)\n");
+	
+	SetCP(0, 29);
+	printf("Line : %d | Collumns : %d\n\n", line, collumns);
+	
+	SetCP(0,0);
+	SetCP(0,2);
 	while(pos != Nil)
 	{
 		printf("%c", Info(pos));
@@ -672,22 +677,9 @@ void refreshScreen(teks L, int line, int collumns)
 		move = pos;
 			if(pos != Nil)
 				printf("\n");
-	}
-	
-	printf(CSI "30;8H"); //move to baris 30 dan colomn 8
-	printf("         ");
-	
-	printf(CSI "30;8H");
-	printf("%d", line);
-	
-	printf(CSI "30;36H");
-	printf("         ");
-	
-	printf(CSI "30;36H"); //move to baris 30 & collomn 36
-	printf("%d", collumns);
-	
-	printf(CSI "?25h"); //show the cursor
+				
 }
+
 
 void refreshTeks_scrolling(teks L, int max_line, int max_collumns)
 {
@@ -723,21 +715,18 @@ void refreshTeks_scrolling(teks L, int max_line, int max_collumns)
 	
 }
 
-void refreshBlank(teks L, int min_line)
+void refreshBlank()
 {
-	int temp;
-	SetCP(2,0);
-	for(int i = 0; i < 26;i++)
+	printf(CSI "?25l");
+	for(int i = 2; i < 28; i++)
 	{
-		temp = getLength(L, min_line);
-		for(int j = 0; j< temp; j++)
-		{
-			printf(" ");
-		}
-		printf("\n");
-		min_line++;
+		printf(CSI "%d;1H", i);
+    	printf(CSI "K"); // clear the line
 	}
+	printf(CSI "%d;1H", 3);
+	printf(CSI "?25h");
 }
+
 
 int getLength(teks L, int CurLine)
 {
@@ -793,13 +782,16 @@ int getMaxRow(teks L)
 	return count;
 }
 
-void tampilan_awal()
+void tampilan(int line, int collumns)
 {
-	printf("\n\n\n\n\n\n\n\n\t\t\tWELCOME TO VUE - TEKS EDITOR");
-	printf("\n\n\n\n\n\n\n\n\n\n\n\n");
-	system("pause");
-	help();
 	system("cls");
+	SetCP(0,0);
+	
+	printf("File (Ctrl+Tab) | Help (Ctrl+H)\n");
+	
+	SetCP(0, 29);
+	printf("Line :          |       Collumns :          ");
+
 }
 
 void editorSaveFile(char *fname, teks L)
