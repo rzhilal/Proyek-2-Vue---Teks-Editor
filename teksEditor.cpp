@@ -522,12 +522,13 @@ void editorKeyProses()
 	char temp;
 	int key;
 	
-	refreshScreen(teksEditor, CurrentLine, CurrentCollumns);
+	tampilan(CurrentLine, CurrentCollumns);
 	
 	while(1)
 	{
 		refreshScreen(teksEditor, CurrentLine, CurrentCollumns);
-		SetCP(CurrentCollumns-1, CurrentLine+2);
+		
+		SetCP(CurrentCollumns-1, CurrentLine+1);
 		temp=getch();
 		key = temp;
 		
@@ -650,19 +651,14 @@ void editorKeyProses()
 
 void refreshScreen(teks L, int line, int collumns)
 {
-	system("cls");
+	refreshBlank();
+	
 	address pos, move;
 	
 	pos = First(L);
 	move = pos;
 	
-	printf("File (Ctrl+Tab) | Help (Ctrl+H)\n");
-	
-	SetCP(0, 29);
-	printf("Line : %d | Collumns : %d\n\n", line, collumns);
-	
-	SetCP(0,0);
-	SetCP(0,2);
+	printf(CSI "?25l"); //hide the cursor
 	while(pos != Nil)
 	{
 		printf("%c", Info(pos));
@@ -679,11 +675,36 @@ void refreshScreen(teks L, int line, int collumns)
 				printf("\n");
 	}
 	
+	printf(CSI "30;8H"); //move to baris 30 dan colomn 8
+	printf("         ");
 	
+	printf(CSI "30;8H");
+	printf("%d", line);
+	
+	printf(CSI "30;36H");
+	printf("         ");
+	
+	printf(CSI "30;36H"); //move to baris 30 & collomn 36
+	printf("%d", collumns);
+	
+	printf(CSI "?25h"); //show the cursor
+}
+
+void tampilan(int line, int collumns)
+{
+	system("cls");
+	SetCP(0,0);
+	
+	printf("File (Ctrl+Tab) | Help (Ctrl+H)\n");
+	
+	SetCP(0, 29);
+	printf("Line :          |       Collumns :          ");
+
 }
 
 void refreshTeks_scrolling(teks L, int max_line, int max_collumns)
 {
+
 	int min_line = max_line - 26;
 	int min_collumns = max_collumns - 121;
 	
@@ -716,20 +737,16 @@ void refreshTeks_scrolling(teks L, int max_line, int max_collumns)
 	
 }
 
-void refreshBlank(teks L, int min_line)
+void refreshBlank() 
 {
-	int temp;
-	SetCP(2,0);
-	for(int i = 0; i < 26;i++)
+	printf(CSI "?25l");
+	for(int i = 2; i < 28; i++)
 	{
-		temp = getLength(L, min_line);
-		for(int j = 0; j< temp; j++)
-		{
-			printf(" ");
-		}
-		printf("\n");
-		min_line++;
+		printf(CSI "%d;1H", i);
+    	printf(CSI "K"); // clear the line
 	}
+	printf(CSI "%d;1H", 3);
+	printf(CSI "?25h");
 }
 
 int getLength(teks L, int CurLine)
@@ -746,6 +763,29 @@ int getLength(teks L, int CurLine)
 	if(Info(pos) == Nil)
 		count = 0;
 	return count;
+}
+
+int getMaxLength(teks L)
+{
+	address pos = First(L);
+	address move = pos;
+	int count = 1;
+	int max = 1;
+	
+	while(pos != Nil)
+	{
+		count = 1;
+		while(Next(move) != Nil)
+		{
+			move = Next(move);
+			count++;
+		}
+		if(count > max)
+			max = count;
+		pos = Down(pos);
+	}
+	
+	return max;
 }
 
 void help()
@@ -834,12 +874,11 @@ void openFile(char *fname, teks *L)
 	while(!feof(data))
 	{
 		fgets(temp, sizeof(temp), data);
+		j = 1;
 		for(int i = 0; i<sizeof(temp); i++)
 		{
-			j = 1;
 			temp_char = temp[i];
-			P = Alokasi(temp_char);
-			InsertChar(&(*L), P, j, k);
+			InsVChar (&(*L), temp[i], j, k);
 			j++;
 		}
 		resetArr(temp, sizeof(temp));
@@ -857,5 +896,28 @@ void resetArr(char *Arr, int size)
 	{
 		Arr[i] = NULL;
 	}
+}
+
+bool EnableVTMode()
+{
+    // Set output mode to handle virtual terminal sequences
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (hOut == INVALID_HANDLE_VALUE)
+    {
+        return false;
+    }
+
+    DWORD dwMode = 0;
+    if (!GetConsoleMode(hOut, &dwMode))
+    {
+        return false;
+    }
+
+    dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+    if (!SetConsoleMode(hOut, dwMode))
+    {
+        return false;
+    }
+    return true;
 }
 
