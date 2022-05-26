@@ -40,7 +40,7 @@ void DeAlokasi (address *P);
 
 void InsertFirstRow (teks * L, address P);
 
-void InsertNewLine(teks * L,int CurLine);
+void InsertNewLine(teks * L, int CurLine, int CurCol);
 
 void InsertChar (teks * L, address New, int CurCol, int CurLine);
 
@@ -70,7 +70,7 @@ int getMaxRow(teks L);
 
 void editorSaveFile(char *fname, teks L);
 
-void openFile(char *fname, teks *L);
+void openFile(char *fname, teks *L, int *col, int *line);
 
 void resetArr(char *Arr, int size);
 

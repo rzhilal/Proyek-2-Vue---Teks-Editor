@@ -522,12 +522,11 @@ void editorKeyProses()
 	char temp;
 	int key;
 	
-	tampilan(CurrentLine, CurrentCollumns);
+	refreshScreen(teksEditor, CurrentLine, CurrentCollumns);
 	
 	while(1)
 	{
 		refreshScreen(teksEditor, CurrentLine, CurrentCollumns);
-		
 		SetCP(CurrentCollumns-1, CurrentLine+1);
 		temp=getch();
 		key = temp;
@@ -638,7 +637,7 @@ void editorKeyProses()
 			}
 			else if(key == 15)
 			{
-				openFile("Bismillah.txt", &teksEditor);
+				openFile("Bismillah.txt", &teksEditor, &CurrentCollumns, &CurrentLine);
 			}
 		}
 		else if (key <= 126)// printing character
@@ -651,14 +650,19 @@ void editorKeyProses()
 
 void refreshScreen(teks L, int line, int collumns)
 {
-	refreshBlank();
-	
+	system("cls");
 	address pos, move;
 	
 	pos = First(L);
 	move = pos;
 	
-	printf(CSI "?25l"); //hide the cursor
+	printf("File (Ctrl+Tab) | Help (Ctrl+H)\n");
+	
+	SetCP(0, 29);
+	printf("Line : %d | Collumns : %d\n\n", line, collumns);
+	
+	SetCP(0,0);
+	SetCP(0,2);
 	while(pos != Nil)
 	{
 		printf("%c", Info(pos));
@@ -675,36 +679,11 @@ void refreshScreen(teks L, int line, int collumns)
 				printf("\n");
 	}
 	
-	printf(CSI "30;8H"); //move to baris 30 dan colomn 8
-	printf("         ");
 	
-	printf(CSI "30;8H");
-	printf("%d", line);
-	
-	printf(CSI "30;36H");
-	printf("         ");
-	
-	printf(CSI "30;36H"); //move to baris 30 & collomn 36
-	printf("%d", collumns);
-	
-	printf(CSI "?25h"); //show the cursor
-}
-
-void tampilan(int line, int collumns)
-{
-	system("cls");
-	SetCP(0,0);
-	
-	printf("File (Ctrl+Tab) | Help (Ctrl+H)\n");
-	
-	SetCP(0, 29);
-	printf("Line :          |       Collumns :          ");
-
 }
 
 void refreshTeks_scrolling(teks L, int max_line, int max_collumns)
 {
-
 	int min_line = max_line - 26;
 	int min_collumns = max_collumns - 121;
 	
@@ -737,16 +716,20 @@ void refreshTeks_scrolling(teks L, int max_line, int max_collumns)
 	
 }
 
-void refreshBlank() 
+void refreshBlank(teks L, int min_line)
 {
-	printf(CSI "?25l");
-	for(int i = 2; i < 28; i++)
+	int temp;
+	SetCP(2,0);
+	for(int i = 0; i < 26;i++)
 	{
-		printf(CSI "%d;1H", i);
-    	printf(CSI "K"); // clear the line
+		temp = getLength(L, min_line);
+		for(int j = 0; j< temp; j++)
+		{
+			printf(" ");
+		}
+		printf("\n");
+		min_line++;
 	}
-	printf(CSI "%d;1H", 3);
-	printf(CSI "?25h");
 }
 
 int getLength(teks L, int CurLine)
@@ -763,29 +746,6 @@ int getLength(teks L, int CurLine)
 	if(Info(pos) == Nil)
 		count = 0;
 	return count;
-}
-
-int getMaxLength(teks L)
-{
-	address pos = First(L);
-	address move = pos;
-	int count = 1;
-	int max = 1;
-	
-	while(pos != Nil)
-	{
-		count = 1;
-		while(Next(move) != Nil)
-		{
-			move = Next(move);
-			count++;
-		}
-		if(count > max)
-			max = count;
-		pos = Down(pos);
-	}
-	
-	return max;
 }
 
 void help()
@@ -860,33 +820,38 @@ void editorSaveFile(char *fname, teks L)
 	fclose(fptr);
 }
 
-void openFile(char *fname, teks *L)
+void openFile(char *fname, teks *L, int *col, int *line)
 {
-	FILE *data;
-	char *temp;
-	infotype temp_char;
-	address P;
-	int j,k; //indikator baris dan kolom (j : kolom, k : baris)
-	k = 1;
+	FILE *fp;
+	char c; //penampung 1 karakter pada file
 	
-	data = fopen(fname, "r");
+	*col = 1;
+	*line = 1;
 	
-	while(!feof(data))
-	{
-		fgets(temp, sizeof(temp), data);
-		j = 1;
-		for(int i = 0; i<sizeof(temp); i++)
+	fp = fopen(fname,"r"); //open file
+	if (fp == NULL)
+		printf("Error in opening file");
+		
+	do {
+		c = fgetc(fp); //baca file 1 karakter
+		if ( feof(fp) ) {
+			break ; //kondisi ketika sudah end file keluar deri perulangan
+		} 
+		if ( c == '\n')
 		{
-			temp_char = temp[i];
-			InsVChar (&(*L), temp[i], j, k);
-			j++;
+			InsertNewLine(&(*L), *line, *col); //untuk menginsert new line pada file ke list dengan baris baru
+			*line = *line + 1;
+			*col = 1;
 		}
-		resetArr(temp, sizeof(temp));
-		InsertNewLine(&(*L), k, sizeof(temp));
-		k++;
-	}
+		else
+		{
+			InsVChar(&(*L), c, *col, *line); //insert karakter pada list
+			*col = *col + 1;
+		} 
+		
+	}while(1);
 	
-	fclose(data);
+	fclose(fp);
 }
 
 void resetArr(char *Arr, int size)
@@ -896,28 +861,5 @@ void resetArr(char *Arr, int size)
 	{
 		Arr[i] = NULL;
 	}
-}
-
-bool EnableVTMode()
-{
-    // Set output mode to handle virtual terminal sequences
-    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-    if (hOut == INVALID_HANDLE_VALUE)
-    {
-        return false;
-    }
-
-    DWORD dwMode = 0;
-    if (!GetConsoleMode(hOut, &dwMode))
-    {
-        return false;
-    }
-
-    dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-    if (!SetConsoleMode(hOut, dwMode))
-    {
-        return false;
-    }
-    return true;
 }
 
