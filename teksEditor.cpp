@@ -650,19 +650,14 @@ void editorKeyProses()
 
 void refreshScreen(teks L, int line, int collumns)
 {
-	system("cls");
+	refreshBlank();
+	
 	address pos, move;
 	
 	pos = First(L);
 	move = pos;
 	
-	printf("File (Ctrl+Tab) | Help (Ctrl+H)\n");
-	
-	SetCP(0, 29);
-	printf("Line : %d | Collumns : %d\n\n", line, collumns);
-	
-	SetCP(0,0);
-	SetCP(0,2);
+	printf(CSI "?25l");
 	while(pos != Nil)
 	{
 		printf("%c", Info(pos));
@@ -677,7 +672,21 @@ void refreshScreen(teks L, int line, int collumns)
 		move = pos;
 			if(pos != Nil)
 				printf("\n");
-				
+	}
+	
+	printf(CSI "30;8H");
+	printf("         ");
+	
+	printf(CSI "30;8H");
+	printf("%d", line);
+	
+	printf(CSI "30;36H");
+	printf("         ");
+	
+	printf(CSI "30;36H");
+	printf("%d", collumns);
+	
+	printf(CSI "?25h");
 }
 
 
