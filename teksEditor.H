@@ -14,6 +14,10 @@
 #define Prev(P) (P)->prev
 #define First(L) (L).First
 
+#define ESC "\x1b"
+#define CSI "\x1b["
+
+
 //ARRAY OF LIST ANGGOTA
 typedef char infotype;
 typedef struct tElmtList *address;
@@ -52,7 +56,7 @@ void refreshScreen(teks L, int line, int collumns);
 
 void refreshTeks_scrolling(teks L, int max_line, int max_collumns);
 
-void refreshBlank(teks L, int min_line);
+void refreshBlank();
 
 void refreshScreen(teks L, int line, int collumns);
 

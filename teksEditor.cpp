@@ -106,7 +106,7 @@ void InsertNewLine(teks * L, int CurLine, int CurCol)
 		}
 		else //kondisi berada di tengah atau akhir
 		{
-			if(Next(pos) != Nil) //kondisi di tengah (error)
+			if(Next(pos) != Nil) //kondisi di tengah
 			{	
 				pos = Next(pos);
 				above = Up(pos);
@@ -217,6 +217,7 @@ void InsertChar (teks * L, address New, int CurCol, int CurLine)
 	
 	if(pos == Nil)
 		InsertFirstRow(&(*L), New);
+		
 	else
 	{
 		for(int i=1; i<CurLine;i++)
@@ -239,36 +240,6 @@ void InsertChar (teks * L, address New, int CurCol, int CurLine)
 		{
 			Next(pos) = New;
 			Prev(New) = pos;
-			
-			while(above != Nil || move!=Nil)
-			{
-				if(above != Nil)
-				{
-					above = Next(above);
-					if(above != Nil)
-						Down(above) = move;
-					if(move != Nil)
-						Up(move) = above;
-				}
-				if(move != Nil)	
-					move = Next(move);
-			}
-			move = New;
-			
-			while(below != Nil || move!=Nil)
-			{
-				if(below != Nil)
-				{
-					below = Next(below);
-					if(below != Nil)
-						Up(below) = move;
-					if(move != Nil)
-						Down(move) = below;	
-				}
-				
-				if(move != Nil)
-					move = Next(move);
-			}
 		}
 		else if (Next(pos) != Nil && CurCol != 1) //ketika karakter di insert diantara
 		{
@@ -276,72 +247,23 @@ void InsertChar (teks * L, address New, int CurCol, int CurLine)
 			Prev(New) = pos;
 			Prev(Next(pos)) = New;
 			Next(pos) = New;
-			
-			while(above != Nil || move!=Nil)
-			{
-				if(above != Nil)
-				{
-					above = Next(above);
-					if(above != Nil)
-						Down(above) = move;	
-				}else
-					above = Nil;
-				if(move != Nil)
-				{
-					Up(move) = above;
-					move = Next(move);
-				}	
-			}
-			move = New;
-			while(below != Nil || move!=Nil)
-			{
-				if(below != Nil)
-				{
-					below = Next(below);
-					if(below != Nil)
-						Up(below) = move;	
-				}else
-					below = Nil;
-				if(move != Nil)
-				{
-					Down(move) = below;
-					move = Next(move);
-				}
-			}
 		}		
 		else // karakter di insert di awal ketika berada di kolom 1 // masih error
 		{
 			Next(New) = pos;
 			Prev(pos) = New;
 			
-			while(above != Nil || move!=Nil)
+			if(above != Nil)
 			{
-				if(above != Nil)
-				{
-					Down(above) = move;
-					if(move != Nil)
-						Up(move) = above;
-					above = Next(above);	
-				}
-				if(move != Nil)
-				{
-					move = Next(move);
-				}
+				Down(above) = New;
+				Up(New) = above;
+				Up(pos) = Nil;
 			}
-			move = New;
-			while(below != Nil || move!=Nil)
+			if(below != Nil)
 			{
-				if(below != Nil)
-				{
-					Up(below) = move;
-					if(move != Nil)
-						Down(move) = below;
-					below = Next(below);	
-				}
-				if(move != Nil)
-				{
-					move = Next(move);
-				}
+				Up(below) = New;
+				Down(New) = below;
+				Down(pos) = Nil;
 			}
 			
 			if(pos == First(*L))
@@ -377,8 +299,20 @@ void DelChar(teks * L, int CurCol, int CurLine)
 	above = Up(pos);
 	below = Down(pos); 
 	
+	if(CurCol == 1 && CurLine == 1);
+	else if(pos == First(*L) && Next(pos) != Nil)
+	{
+		move = Next(pos);
+		First(*L) = move;
+		if(rec_down != Nil)
+		{
+			Up(rec_down) = move;
+			Down(move) = rec_down;
+		}else
+			Down(move) = Nil;
+	}
 	
-	if(CurCol == 1 && CurLine != 1) // kondisi ketika deletion berada di awal
+	else if(CurCol == 1 && CurLine != 1) // kondisi ketika deletion berada di awal
 	{
 		if(Info(pos) != Nil) // ketika baris ada isi
 		{	
@@ -389,50 +323,28 @@ void DelChar(teks * L, int CurCol, int CurLine)
 	
 			Next(move) = pos;
 			Prev(pos) = move;
-						
-			while(rec_up != Nil || rec_down != Nil)
+			
+			Up(pos) = Nil;
+			Down(pos) = Nil;
+			
+			if(rec_down != Nil)
 			{
-				if(rec_up != Nil && rec_down == Nil)
-				{
-					Down(rec_up) = Nil;
-					rec_up = Next(rec_up);
-				}
-				else if(rec_up == Nil  && rec_down != Nil)
-				{
-					Up(rec_down) = Nil;
-					rec_down = Next(rec_down);
-				}
-				else
-				{
-					Down(rec_up) = rec_down;
-					Up(rec_down) = rec_up;
-					
-					rec_up = Next(rec_up);
-					rec_down = Next(rec_down);
-				}
+				Up(rec_down) = rec_up;
+				Down(rec_up) = rec_down;
 			}
+			else
+				Down(rec_up) = Nil;
 		}
 		else // ketika baris yang dihapus baru insert line saja
 		{
-			while(above != Nil || below != Nil)
+			if(rec_down != Nil)
 			{
-				if(above != Nil && below == Nil)
-				{
-					Down(above) = Nil;
-					above = Next(above);
-				}else if(above == Nil && below != Nil)
-				{
-					Up(below) = Nil;
-					below = Next(below);
-				}else
-				{
-					Down(above) = below;
-					Up(below) = above;
-					
-					above = Next(above);
-					below = Next(below);
-				}
+				Up(rec_down) = rec_up;
+				Down(rec_up) = rec_down;
 			}
+			else
+				Down(rec_up) = Nil;
+			
 			DeAlokasi(&pos);
 		}
 	}
@@ -443,71 +355,41 @@ void DelChar(teks * L, int CurCol, int CurLine)
 		
 		else if(Next(pos) == Nil && Prev(pos) != Nil ) // node yang dihapus berada di akhir
 		{
-			if(above != Nil)
-				Down(above) = Nil;
-			if(below != Nil)
-				Up(below) = Nil;
 			
 			Next(Prev(pos)) = Nil;
-			
 			DeAlokasi(&pos); 
 		}
-		
 		else if(Next(pos) != Nil) //node yang dihapus diantara
 		{
 			move = Next(pos);
-			
-			if(CurCol != 2)
+			if(Prev(pos) != Nil)
 				Next(Prev(pos)) = move;
-			
-			while(above != Nil || move != Nil)
+			else
 			{
-				if(above != Nil && move == Nil)
+				if(rec_up != Nil)
 				{
-					Down(above) = Nil;
-					above = Next(above);
+					Down(rec_up) = move;
+					Up(move) = rec_up;
 				}
-				else if(above == Nil || move != Nil)
-				{
+				else
 					Up(move) = Nil;
-					move = Next(move);
-				}
-				else
-				{
-					Down(above) = move;
-					Up(move) = above;
-					
-					above = Next(above);
-					move = Next(move);
-				}
-			}
-			move = Next(pos);
 			
-			while(below != Nil || move != Nil)
-			{
-				if(below != Nil && move == Nil)
+				if(rec_down != Nil)
 				{
-					Up(below) = Nil;
-					below = Next(below);
-				}
-				else if(below == Nil || move != Nil)
-				{
-					Down(move) = Nil;
-					move = Next(move);
+					Up(rec_down) = move;
+					Down(move) = rec_down;			
 				}
 				else
-				{
-					Up(below) = move;
-					Down(move) = below;
-					
-					below = Next(below);
-					move = Next(move);
-				}	
+					Down(move) = Nil;
 			}
-		DeAlokasi(&pos);
+			
+			Prev(move) = Prev(pos);
+	
+			DeAlokasi(&pos);
 		}
 	}
 }
+
 
 void editorKeyProses()
 {
@@ -516,17 +398,33 @@ void editorKeyProses()
 	
 	int CurrentLine = 1;
 	int CurrentCollumns = 1;
+	int max_Line = 0;
+	int min_Line = 0;
+	int max_Col = 0;
 	int temp_int;
 	address Position;
 	
 	char temp;
 	int key;
 	
-	refreshScreen(teksEditor, CurrentLine, CurrentCollumns);
+	tampilan(CurrentLine, CurrentCollumns);
 	
 	while(1)
 	{
+		
+		
+		if(max_Line < CurrentLine)
+		{
+			max_Line = CurrentLine;
+			min_Line++;
+		} else if(min_Line > CurrentLine)
+		{
+			min_Line = CurrentLine;
+			max_Line--;
+		}
+		
 		refreshScreen(teksEditor, CurrentLine, CurrentCollumns);
+		
 		SetCP(CurrentCollumns-1, CurrentLine+1);
 		temp=getch();
 		key = temp;
@@ -869,5 +767,28 @@ void resetArr(char *Arr, int size)
 	{
 		Arr[i] = NULL;
 	}
+}
+
+bool EnableVTMode()
+{
+    // Set output mode to handle virtual terminal sequences
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (hOut == INVALID_HANDLE_VALUE)
+    {
+        return false;
+    }
+
+    DWORD dwMode = 0;
+    if (!GetConsoleMode(hOut, &dwMode))
+    {
+        return false;
+    }
+
+    dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+    if (!SetConsoleMode(hOut, dwMode))
+    {
+        return false;
+    }
+    return true;
 }
 
