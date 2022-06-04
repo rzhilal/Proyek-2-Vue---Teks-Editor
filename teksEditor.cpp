@@ -792,3 +792,101 @@ bool EnableVTMode()
     return true;
 }
 
+void color(int color)
+{
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),color);
+}
+
+void menu()
+{
+	int Set[] = {7,7,7,7}; // DEFAULT COLORS
+    int counter = 2;
+    char key;
+	bool active = true;
+    while(active)
+    {
+
+
+        gotoxy(1,1);
+        color(Set[0]);
+        printf("Open File	[CTRL + O]");
+
+        gotoxy(1,2);
+        color(Set[1]);
+        printf("Open File	[CTRL + O]");
+
+        gotoxy(1,3);
+        color(Set[2]);
+        printf("Open File	[CTRL + O]");
+
+        gotoxy(1,4);
+        color(Set[3]);
+        printf("Open File	[CTRL + O]");
+
+
+        key = _getch();
+
+        if(key == 72 && (counter >=2 && counter <= 5))
+        {
+            counter--;
+        }
+        if(key == 80 && (counter >=1 && counter <= 4))
+        {
+            counter++;
+        }
+        if(key == '\r')//carriage return
+        {
+            if(counter == 1)
+            {
+                // if enter is click and highlight is on 1 the program will run the code here
+                printf("Menu Opened");
+                system("pause");
+                active = false;
+                color(7);
+            }
+            if(counter == 2)
+            {
+                printf("Menu Opened");
+            	system("pause");
+				active = false;
+				color(7);
+			}
+            if(counter == 3)
+            {
+                printf("Menu Opened");
+            	system("pause");
+				active = false;
+				color(7);
+			}
+            if(counter == 4)
+            {
+                printf("Menu Opened");
+            	system("pause");
+				active = false;
+				color(7);
+			}
+        }
+        
+        Set[0] = 7;
+        Set[1] = 7;
+        Set[2] = 7;
+        Set[3] = 7;
+
+        if(counter == 1)
+        {
+            Set[0] = 12;
+        }
+        if(counter == 2)
+        {
+            Set[1] = 12;
+        }
+        if(counter == 3)
+        {
+            Set[2] = 12;
+        }
+        if(counter == 4)
+        {
+            Set[3] = 12;
+        }
+    }
+}

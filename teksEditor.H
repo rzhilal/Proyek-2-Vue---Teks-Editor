@@ -83,6 +83,11 @@ int getMaxLength(teks L);
 void tampilan(int line, int collumns);
 
 bool EnableVTMode();
+
+void menu();
+
+void color(int color);
+
 #endif
 
 
