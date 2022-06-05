@@ -530,16 +530,29 @@ void editorKeyProses()
 			/*Ctrl + Q (Quit shortcut)*/
 			else if(key == 17)
 			{
+				savemenu:
 				editorSaveFile("Bismillah.txt", teksEditor);
 				exit(0);
 			}
 			else if(key == 15)
 			{
+				openmenu:
 				openFile("Bismillah.txt", &teksEditor, &CurrentCollumns, &CurrentLine);
 			}
 			else if(key == 20)
 			{
-				menu();
+				temp_int = menu();
+				switch(temp_int)
+				{
+					case 1 :
+						goto openmenu;
+					case 2 :
+						goto savemenu;
+					case 3 :
+						goto save;
+					case 4 :
+						goto menu:
+				}
 			}
 		}
 		else if (key <= 126)// printing character
@@ -801,7 +814,7 @@ void color(int color)
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),color);
 }
 
-void menu()
+int menu()
 {
 	int Set[] = {7,7,7,7}; // DEFAULT COLORS
     int counter = 2;
@@ -813,19 +826,19 @@ void menu()
 
         SetCP(1,1);
         color(Set[0]);
-        printf("Open File	[CTRL + O]");
+        printf("Open File");
 
         SetCP(1,2);
         color(Set[1]);
-        printf("Open File	[CTRL + O]");
+        printf("Save File");
 
         SetCP(1,3);
         color(Set[2]);
-        printf("Open File	[CTRL + O]");
+        printf("Save As  ");
 
         SetCP(1,4);
         color(Set[3]);
-        printf("Open File	[CTRL + O]");
+        printf("Esc      ");
 
 
         key = _getch();
@@ -847,6 +860,7 @@ void menu()
                 system("pause");
                 active = false;
                 color(7);
+                return 1;
             }
             if(counter == 2)
             {
@@ -854,6 +868,7 @@ void menu()
             	system("pause");
 				active = false;
 				color(7);
+				return 2;
 			}
             if(counter == 3)
             {
@@ -861,6 +876,7 @@ void menu()
             	system("pause");
 				active = false;
 				color(7);
+				return 3;
 			}
             if(counter == 4)
             {
@@ -868,6 +884,7 @@ void menu()
             	system("pause");
 				active = false;
 				color(7);
+				return 4;
 			}
         }
         

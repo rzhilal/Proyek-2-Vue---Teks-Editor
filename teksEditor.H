@@ -84,7 +84,7 @@ void tampilan(int line, int collumns);
 
 bool EnableVTMode();
 
-void menu();
+int menu();
 
 void color(int color);
 
