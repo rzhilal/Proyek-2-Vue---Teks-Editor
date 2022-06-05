@@ -548,10 +548,6 @@ void editorKeyProses()
 						goto openmenu;
 					case 2 :
 						goto savemenu;
-					case 3 :
-						goto save;
-					case 4 :
-						goto menu:
 				}
 			}
 		}
@@ -816,6 +812,10 @@ void color(int color)
 
 int menu()
 {
+	SetCP(0,1);
+	printf("________________________|");
+	SetCP(0,6);
+    printf("________________________|");
 	int Set[] = {7,7,7,7}; // DEFAULT COLORS
     int counter = 2;
     char key;
@@ -823,31 +823,29 @@ int menu()
     while(active)
     {
 
-
-        SetCP(1,1);
+        SetCP(0,2);
         color(Set[0]);
-        printf("Open File");
+        printf("Open File     [CTRL + O]|");
 
-        SetCP(1,2);
+        SetCP(0,3);
         color(Set[1]);
-        printf("Save File");
+        printf("Save File     [CTRL + S]|");
 
-        SetCP(1,3);
+        SetCP(0,4);
         color(Set[2]);
-        printf("Save As  ");
+        printf("Save As       [CTRL + A]|");
 
-        SetCP(1,4);
+        SetCP(0,5);
         color(Set[3]);
-        printf("Esc      ");
-
+        printf("Back          [   ESC  ]|");
 
         key = _getch();
 
-        if(key == 72 && (counter >=2 && counter <= 5))
+        if(key == 72 && (counter >=2 && counter <= 4))
         {
             counter--;
         }
-        if(key == 80 && (counter >=1 && counter <= 4))
+        if(key == 80 && (counter >=1 && counter <= 3))
         {
             counter++;
         }
