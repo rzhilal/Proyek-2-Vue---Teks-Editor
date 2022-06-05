@@ -537,6 +537,7 @@ void editorKeyProses()
 			else if(key == 15)
 			{
 				openmenu:
+				clearlist(&teksEditor);
 				openFile("Bismillah.txt", &teksEditor, &CurrentCollumns, &CurrentLine);
 			}
 			else if(key == 20)
@@ -908,4 +909,42 @@ int menu()
             Set[3] = 12;
         }
     }
+}
+void clearlist(teks *L)
+{
+	address pos, move, rec, rec_pos;
+	pos = First(*L);
+	
+	if(First(*L) != Nil)
+	{
+		while (Down(pos)!= Nil)
+			pos = Down(pos);
+		
+		move =pos;
+		while (Next(move) != Nil)
+			move = Next(move);
+	
+		
+		while(pos != Nil)
+		{
+			rec_pos = Up(pos);
+			move = pos;
+			while(Next(move) != Nil)
+				move = Next(move);
+				
+			while(move != Nil)
+			{
+				rec = Prev(move);
+				if (rec != Nil)
+					Next(rec) = Nil;
+				else
+					rec = Nil;
+		
+				DeAlokasi(&move);
+				move = rec;
+			}
+			pos = rec_pos;
+		}
+		First(*L) = Nil;
+	}
 }

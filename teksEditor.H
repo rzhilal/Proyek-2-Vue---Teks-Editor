@@ -88,6 +88,8 @@ int menu();
 
 void color(int color);
 
+void clearlist(teks *L);
+
 #endif
 
 
