@@ -537,6 +537,10 @@ void editorKeyProses()
 			{
 				openFile("Bismillah.txt", &teksEditor, &CurrentCollumns, &CurrentLine);
 			}
+			else if(key == 20)
+			{
+				menu();
+			}
 		}
 		else if (key <= 126)// printing character
 		{
@@ -694,7 +698,7 @@ void tampilan(int line, int collumns)
 	system("cls");
 	SetCP(0,0);
 	
-	printf("File (Ctrl+Tab) | Help (Ctrl+H)\n");
+	printf("MENU [CTRL + T] 	|	 HELP [CTRL + G] 	|	 EXIT [CTRL + E]\n");
 	
 	SetCP(0, 29);
 	printf("Line :          |       Collumns :          ");
@@ -807,19 +811,19 @@ void menu()
     {
 
 
-        gotoxy(1,1);
+        SetCP(1,1);
         color(Set[0]);
         printf("Open File	[CTRL + O]");
 
-        gotoxy(1,2);
+        SetCP(1,2);
         color(Set[1]);
         printf("Open File	[CTRL + O]");
 
-        gotoxy(1,3);
+        SetCP(1,3);
         color(Set[2]);
         printf("Open File	[CTRL + O]");
 
-        gotoxy(1,4);
+        SetCP(1,4);
         color(Set[3]);
         printf("Open File	[CTRL + O]");
 
