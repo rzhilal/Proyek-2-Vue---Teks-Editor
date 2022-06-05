@@ -876,7 +876,7 @@ int menu()
             	system("pause");
 				active = false;
 				color(7);
-				return 3;
+//				return 3;
 			}
             if(counter == 4)
             {
@@ -884,7 +884,7 @@ int menu()
             	system("pause");
 				active = false;
 				color(7);
-				return 4;
+//				return 4;
 			}
         }
         
