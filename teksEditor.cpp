@@ -604,7 +604,7 @@ void refreshScreen(teks L, int line, int collumns)
 
 void refreshTeks_scrolling(teks L, int max_line, int max_collumns)
 {
-	int min_line = max_line - 26;
+	int min_line = max_line - 25;
 	int min_collumns = max_collumns - 121;
 	
 	address pos, move;
@@ -614,9 +614,9 @@ void refreshTeks_scrolling(teks L, int max_line, int max_collumns)
 	
 	SetCP(2, 0);
 	
-	if( min_line > 26 )
+	if( min_line > 25 )
 	{
-		min_line = min_line - 26;
+		min_line = min_line - 25;
 	}
 	
 	for(int i = 0; i< min_line - 1; i++)
@@ -629,7 +629,7 @@ void refreshTeks_scrolling(teks L, int max_line, int max_collumns)
 		min_collumns = max_collumns - 121;
 	}
 	
-	for(int i = 0; i<26;i++)
+	for(int i = 0; i<25;i++)
 	{
 		
 	}
@@ -708,8 +708,8 @@ void tampilan(int line, int collumns)
 	system("cls");
 	SetCP(0,0);
 	
-	printf("MENU [CTRL + T] 	|	 HELP [CTRL + G] 	|	 EXIT [CTRL + E]\n");
-	
+	printf("|  MENU [CTRL + T] 	|	 HELP [CTRL + G] 	|	 EXIT [CTRL + E]  |\n");
+
 	SetCP(0, 29);
 	printf("Line :          |       Collumns :          ");
 
