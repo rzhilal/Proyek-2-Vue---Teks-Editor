@@ -948,3 +948,43 @@ void clearlist(teks *L)
 		First(*L) = Nil;
 	}
 }
+
+void tampilan_awal()
+{
+	SetCP(30,5);
+	printf("TTTTTT   TTTTTT   TT  TT   TTTTT         \n");
+	SetCP(30,6);
+	printf("  TT     TT       TT TT   TT             \n");
+	SetCP(30,7);
+	printf("  TT     TTTTT    TTT      TTTT          \n");
+	SetCP(30,8);
+	printf("  TT     TT       TT TT       TT         \n");
+	SetCP(30,9);
+	printf("  TT     TTTTTT   TT  TT  TTTTT          \n");
+	
+	SetCP(30,11);
+	printf("TTTTTT   TTTT     TT  TTTTTTTT    TTT     TTTTT         \n");
+	SetCP(30,12);
+	printf("TT       TT  TT   TT     TT     TT   TT   TT  TT        \n");
+	SetCP(30,13);
+	printf("TTTTT    TT  TT   TT     TT     TT   TT   TTTTT         \n");
+	SetCP(30,14);
+	printf("TT       TT  TT   TT     TT     TT   TT   TT  TT        \n");
+	SetCP(30,15);
+	printf("TTTTTT   TTTT     TT     TT       TTT     TT   TT       \n");
+	
+	SetCP(30,17);
+	printf("TT     TT   TT   TT  TTTTTT             \n");
+	SetCP(30,18);
+	printf("TT     TT   TT   TT  TT    				\n");
+	SetCP(30,19);
+	printf(" TT   TT    TT   TT  TTTTT  			\n");
+	SetCP(30,20);
+	printf("  TT TT     TT   TT  TT  				\n");
+	SetCP(30,21);
+	printf("   TTT       TTTTT   TTTTTT			\n\n\n\n\n\n\n\n");
+	system("pause");
+	system("cls");
+	
+
+}
