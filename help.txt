@@ -1,1 +1,47 @@
-test help
+_______________________________________________________________________________________________________________________
+|                                             - PANDUAN PENGGUNAAN -                                                  |
+|_____________________________________________________________________________________________________________________|
+|                                                                                                                     |
+| CTRL + T          Menampilkan menu dengan menggunakan pulldown                                                      |
+|                                                                                                                     |
+| in menu :                                                                                                           |
+| CTRL + O          Shortcut fitur untuk membuka file yang telah disimpan                                             |
+| CTRL + S          Shortcut fitur untuk menyimpan file                                                               |
+| CTRL + A          Shortcut fitur untuk menyimpan file yang sudah disimpan dengan directory yang berbeda             |
+|                                                                                                                     |
+| CTRL + G          Membuka fitur help/panduan penggunaan                                                             |
+| CTRL + Q          Shortcut untuk keluar dari program                                                                |
+|                                                                                                                     |
+| Gunakan menu pulldown sesuai dengan shortcutnya                                                                     |     
+|                                                                                                                     |
+|_____________________________________________________________________________________________________________________|     
+|                                               - VUE TEXT EDITOR -                                                   |
+|                               Developed by Kelompok VUE 1B D3 Teknik Informatika POLBAN                             |
+|                                                   Est. 2022                                                         |
+|_____________________________________________________________________________________________________________________|
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                                                                                                                                                                                                              
