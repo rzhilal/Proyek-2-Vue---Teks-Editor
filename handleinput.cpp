@@ -324,6 +324,12 @@ void editorKeyProses()
 				isedited = false;
 				SetCP(2, 0);
 			}
+			/*Ctrl + G (Help)*/
+			else if(key == 7)
+			{
+				help();
+				tampilan(CurrentLine, CurrentCollumns);
+			}
 		}
 		else if (key <= 126)// printing character
 		{
