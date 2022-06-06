@@ -82,8 +82,6 @@ void editorKeyProses(); //Rezki bagian cursor dan sisanya hilal
 
 int getMaxRow(teks L);
 
-int getMaxLength(teks L);
-
 void DelChar(teks * L, int CurCol, int CurLine);
 
 int getLength(teks L, int CurLine);
