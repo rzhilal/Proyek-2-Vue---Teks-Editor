@@ -116,5 +116,8 @@ void help()
 	
 	printf("\n\t");
 	fclose(data);
+	SetCP(0,0);
+	SetCP(55,28);
 	system("pause");
+	
 }
