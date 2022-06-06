@@ -138,3 +138,15 @@ int menu()
         }
     }
 }
+
+void refreshBlank()
+{
+	printf(CSI "?25l");
+	for(int i = 2; i < 29; i++)
+	{
+		printf(CSI "%d;1H", i);
+    	printf(CSI "K"); // clear the line
+	}
+	printf(CSI "%d;1H", 3);
+	printf(CSI "?25h");
+}
