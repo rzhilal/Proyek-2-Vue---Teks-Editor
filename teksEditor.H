@@ -36,7 +36,7 @@ typedef struct {
 
 /*Display*/
 
-void refreshScreen(teks L, int line, int collumns); //Salman
+void refreshScreen(teks L, int line, int collumns, int min_line); //Salman
 
 void refreshBlank(); //Zahra
 

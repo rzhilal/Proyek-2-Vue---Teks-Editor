@@ -35,9 +35,9 @@ void editorKeyProses()
 	
 	int CurrentLine = 1;
 	int CurrentCollumns = 1;
-	int max_Line = 0;
-	int min_Line = 0;
-	int max_Col = 0;
+	int buff_line = 1;
+	int max_line = 26;
+	int min_line = 1;
 	int temp_int;
 	address Position;
 	
@@ -53,20 +53,33 @@ void editorKeyProses()
 	while(1)
 	{
 		
-		
-		if(max_Line < CurrentLine)
+		if(max_line < CurrentLine)
 		{
-			max_Line = CurrentLine;
-			min_Line++;
-		} else if(min_Line > CurrentLine)
-		{
-			min_Line = CurrentLine;
-			max_Line--;
+			max_line = CurrentLine;
+			min_line = CurrentLine - 25;
 		}
 		
-		refreshScreen(teksEditor, CurrentLine, CurrentCollumns);
+		if(min_line > CurrentLine)
+		{
+			min_line--;
+			max_line--;
+		}
 		
-		SetCP(CurrentCollumns-1, CurrentLine+1);
+		refreshScreen(teksEditor, CurrentLine, CurrentCollumns, min_line);
+		
+		if(CurrentLine == max_line)
+		{
+			buff_line = 26;
+		}
+		else if(CurrentLine < min_line)
+		{
+				buff_line = 2;
+		}else
+		{
+			buff_line = 26 - (max_line - CurrentLine);
+		}
+		
+		SetCP(CurrentCollumns-1, buff_line+1);
 		temp=getch();
 		key = temp;
 		
@@ -163,6 +176,7 @@ void editorKeyProses()
 			/***Handle Enter***/                     
 			else if(key == 13)
 			{
+				batas:
 				InsertNewLine(&teksEditor, CurrentLine, CurrentCollumns);
 				CurrentLine++;
 				CurrentCollumns = 1;
@@ -248,17 +262,17 @@ void editorKeyProses()
 					printf("Nama File yang ingin dibuka(.txt) : ");
 					scanf("%s", temp_file);
 					clearlist(&teksEditor);
+					SetCP(0, 0);
 					openFile(temp_file, &teksEditor, &CurrentCollumns, &CurrentLine);
-					SetCP(2, 0);
 				}
 				else
 				{
 					printf(CSI "30;58H");
 					printf("Nama File yang ingin dibuka(.txt) : ");
 					scanf("%s", temp_file);
+					SetCP(0, 0);
 					clearlist(&teksEditor);
 					openFile(temp_file, &teksEditor, &CurrentCollumns, &CurrentLine);
-					SetCP(2, 0);
 				}
 				isopen = true;
 			}
@@ -316,6 +330,8 @@ void editorKeyProses()
 			InsVChar(&teksEditor, temp, CurrentCollumns, CurrentLine);
 			isedited = true;
 			CurrentCollumns++;
+			if(CurrentCollumns == 120)
+				goto batas;
 		}
 	}
 }

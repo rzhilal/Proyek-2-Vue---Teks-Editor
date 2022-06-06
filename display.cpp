@@ -151,17 +151,22 @@ void refreshBlank()
 	printf(CSI "?25h");
 }
 
-void refreshScreen(teks L, int line, int collumns)
+void refreshScreen(teks L, int line, int collumns, int min_line)
 {
 	refreshBlank();
-	
 	address pos, move;
+	int stopper = 1;
 	
 	pos = First(L);
-	move = pos;
 	
+	
+	for(int i = 1; i<min_line;i++)
+		pos = Down(pos);
+		
+	move = pos;
 	printf(CSI "?25l");
-	while(pos != Nil)
+	
+	while(pos !=Nil && stopper != 27)
 	{
 		printf("%c", Info(pos));
 		while(Next(move) != Nil)
@@ -175,6 +180,7 @@ void refreshScreen(teks L, int line, int collumns)
 		move = pos;
 			if(pos != Nil)
 				printf("\n");
+		stopper++;
 	}
 	
 	printf(CSI "30;8H");
