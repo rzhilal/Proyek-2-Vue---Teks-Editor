@@ -150,3 +150,82 @@ void refreshBlank()
 	printf(CSI "%d;1H", 3);
 	printf(CSI "?25h");
 }
+
+void refreshScreen(teks L, int line, int collumns)
+{
+	refreshBlank();
+	
+	address pos, move;
+	
+	pos = First(L);
+	move = pos;
+	
+	printf(CSI "?25l");
+	while(pos != Nil)
+	{
+		printf("%c", Info(pos));
+		while(Next(move) != Nil)
+		{
+			move = Next(move);
+			if(move != Nil)
+				fflush(stdout);
+				printf("%c", Info(move));
+		}
+		pos = Down(pos);
+		move = pos;
+			if(pos != Nil)
+				printf("\n");
+	}
+	
+	printf(CSI "30;8H");
+	printf("         ");
+	
+	printf(CSI "30;8H");
+	printf("%d", line);
+	
+	printf(CSI "30;36H");
+	printf("         ");
+	
+	printf(CSI "30;36H");
+	printf("%d", collumns);
+	
+	printf(CSI "30;58H");
+	printf("                                                              ");
+	
+	printf(CSI "?25h");
+}
+
+void tampilan(int line, int collumns)
+{
+	system("cls");
+	SetCP(0,0);
+	
+	printf("|  MENU [CTRL + T] 	|	 HELP [CTRL + G] 	|	 EXIT [CTRL + Q]  |\n");
+
+	SetCP(0, 29);
+	printf("Line :          |       Collumns :          ");
+
+}
+
+bool EnableVTMode()
+{
+    // Set output mode to handle virtual terminal sequences
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (hOut == INVALID_HANDLE_VALUE)
+    {
+        return false;
+    }
+
+    DWORD dwMode = 0;
+    if (!GetConsoleMode(hOut, &dwMode))
+    {
+        return false;
+    }
+
+    dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+    if (!SetConsoleMode(hOut, dwMode))
+    {
+        return false;
+    }
+    return true;
+}
