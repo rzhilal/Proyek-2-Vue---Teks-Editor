@@ -100,3 +100,21 @@ void openFile(char *fname, teks *L, int *col, int *line)
 	
 	fclose(fp);
 }
+
+void help()
+{
+	FILE *data;
+	char help[600];
+	
+	data = fopen("help.txt", "r");
+	
+	system("cls");
+	while(!feof(data)){
+		fgets(help, sizeof(help), data);
+		printf("%s", help);
+	}
+	
+	printf("\n\t");
+	fclose(data);
+	system("pause");
+}
