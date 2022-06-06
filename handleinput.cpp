@@ -72,6 +72,72 @@ void editorKeyProses()
 		
 		if(key == -32) // cursor interact
 		{
+			key=getch();
+				switch(key)
+				{
+					case 72:
+						{//up
+							//program untuk memindahkan posisi cursor kearah atas
+							CurrentLine--;
+							if(CurrentLine == 0)
+								CurrentLine = 1;
+							else{
+								temp_int = getLength(teksEditor, CurrentLine)+1;
+								if(CurrentCollumns > temp_int)
+									CurrentCollumns = temp_int;
+								
+							}
+							break;
+						}
+					case 75:
+						{//left
+							//program untuk memindahkan posisi cursor kearah kiri
+							CurrentCollumns--;
+							if(CurrentCollumns == 0)
+							{
+								if(CurrentLine-1 != 0) //kondisi ketika bukan berada di baris 1
+								{
+									CurrentLine--;
+									CurrentCollumns = getLength(teksEditor, CurrentLine)+1;
+								}else //kondisi ketika berada di baris 1
+								{
+									CurrentCollumns = 1;
+								}
+							}
+							break;
+						}
+					case 77:
+						{//right
+							//program untuk memindahkan posisi cursor kearah kanan
+							CurrentCollumns++;
+							temp_int = getLength(teksEditor, CurrentLine)+1;
+							if(CurrentCollumns > getLength(teksEditor, CurrentLine)+1)
+							{
+								CurrentLine++;
+								if(CurrentLine > getMaxRow(teksEditor))
+								{
+									CurrentLine--;
+									CurrentCollumns = getLength(teksEditor, CurrentLine)+1;
+								}
+								else
+									CurrentCollumns = 1;
+							}
+							break;
+						}
+					case 80:
+						{//down
+							//program untuk memindahkan posisi cursor kearah bawah
+							if(CurrentLine+1 > getMaxRow(teksEditor))
+								CurrentCollumns = getLength(teksEditor, CurrentLine)+1;
+							else
+							{
+								CurrentLine++;
+								temp_int = getLength(teksEditor, CurrentLine);
+								if(CurrentCollumns > temp_int)
+									CurrentCollumns = temp_int+1;
+							}
+						}
+				}
 		}
 		
 		else if(key <=31) //non printing character
@@ -640,4 +706,12 @@ void DelChar(teks * L, int CurCol, int CurLine)
 			DeAlokasi(&pos);
 		}
 	}
+}
+
+void SetCP(char x, char y)
+{
+	static const HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+	fflush(stdin);
+	COORD coord = { (SHORT)x, (SHORT)y };
+	SetConsoleCursorPosition(hOut, coord);
 }
