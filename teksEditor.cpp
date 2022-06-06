@@ -1,5 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "teksEditor.H"
 
 bool IsEmpty (teks L)
@@ -404,6 +402,10 @@ void editorKeyProses()
 	int temp_int;
 	address Position;
 	
+	bool isedited = false;
+	bool isopen = false;
+	char temp_char;
+	char temp_file[55];
 	char temp;
 	int key;
 	
@@ -530,16 +532,98 @@ void editorKeyProses()
 			/*Ctrl + Q (Quit shortcut)*/
 			else if(key == 17)
 			{
-				savemenu:
-				editorSaveFile("Bismillah.txt", teksEditor);
+				if(isedited)
+				{
+					printf(CSI "30;58H");
+					printf("Save perubahan?(y/n) : ");
+					scanf("%c", &temp_char);
+					SetCP(2, 0);
+					if (temp_char == 'y' || temp_char == 'Y')
+					{
+						if(isopen == true)
+						{
+							printf(CSI "30;58H");
+							printf("                                      ");
+							editorSaveFile( temp_file, teksEditor);
+							printf(CSI "30;58H");
+							printf("Saved");
+							Sleep(200);
+						}else
+						{
+							printf(CSI "30;58H");
+							printf("                                      ");
+							printf(CSI "30;58H");
+							printf("Simpan dengan nama(.txt) : ");
+							scanf("%s", temp_file);
+							editorSaveFile( temp_file, teksEditor);
+							printf(CSI "30;58H");
+							printf("                                      ");
+							printf(CSI "30;58H");
+							printf("Saved");
+							Sleep(200);
+							SetCP(2, 0);	
+						}
+					}
+				}
 				exit(0);
 			}
+			/*Ctrl + O (Open Menu)*/
 			else if(key == 15)
 			{
 				openmenu:
-				clearlist(&teksEditor);
-				openFile("Bismillah.txt", &teksEditor, &CurrentCollumns, &CurrentLine);
+				if(isedited == true)
+				{
+					printf(CSI "30;58H");
+					printf("Save perubahan?(y/n) : ");
+					scanf("%c", &temp_char);
+					SetCP(2, 0);
+					if (temp_char == 'y' || temp_char == 'Y')
+					{
+						if(isopen == true)
+						{
+							printf(CSI "30;58H");
+							printf("                                      ");
+							editorSaveFile( temp_file, teksEditor);
+							printf(CSI "30;58H");
+							printf("Saved");
+							Sleep(200);
+						}else
+						{
+							printf(CSI "30;58H");
+							printf("                                      ");
+							printf(CSI "30;58H");
+							printf("Simpan dengan nama(.txt) : ");
+							scanf("%s", temp_file);
+							editorSaveFile( temp_file, teksEditor);
+							printf(CSI "30;58H");
+							printf("                                      ");
+							printf(CSI "30;58H");
+							printf("Saved");
+							Sleep(200);
+							SetCP(2, 0);	
+						}
+					}
+					printf(CSI "30;58H");
+					printf("                                              ");
+					printf(CSI "30;58H");
+					printf("Nama File yang ingin dibuka(.txt) : ");
+					scanf("%s", temp_file);
+					clearlist(&teksEditor);
+					openFile(temp_file, &teksEditor, &CurrentCollumns, &CurrentLine);
+					SetCP(2, 0);
+				}
+				else
+				{
+					printf(CSI "30;58H");
+					printf("Nama File yang ingin dibuka(.txt) : ");
+					scanf("%s", temp_file);
+					clearlist(&teksEditor);
+					openFile(temp_file, &teksEditor, &CurrentCollumns, &CurrentLine);
+					SetCP(2, 0);
+				}
+				isopen = true;
 			}
+			/*Ctrl + T (Menu tab)*/
 			else if(key == 20)
 			{
 				temp_int = menu();
@@ -549,12 +633,49 @@ void editorKeyProses()
 						goto openmenu;
 					case 2 :
 						goto savemenu;
+					case 3:
+						goto saveas;
+					case 4:
+						break;
 				}
+			}
+			/*Ctrl + S (Save tab)*/
+			else if(key == 19)
+			{
+				savemenu:
+				if(isopen == false)
+				{
+					printf(CSI "30;58H");
+					printf("Simpan dengan Nama(.txt) : ");
+					scanf("%s", temp_file);
+					editorSaveFile( temp_file, teksEditor);
+					SetCP(2, 0);
+				}
+				else
+				{
+					printf(CSI "30;58H");
+					printf("Saved");
+					Sleep(200);
+					editorSaveFile(temp_file, teksEditor);
+				}
+				isedited = false;
+			}
+			/*Ctrl + A (Save As)*/
+			else if(key == 1)
+			{
+				saveas:
+				printf(CSI "30;58H");
+				printf("Simpan file dengan Nama(.txt) : ");
+				scanf("%s", temp_file);
+				editorSaveFile( temp_file, teksEditor);
+				isedited = false;
+				SetCP(2, 0);
 			}
 		}
 		else if (key <= 126)// printing character
 		{
 			InsVChar(&teksEditor, temp, CurrentCollumns, CurrentLine);
+			isedited = true;
 			CurrentCollumns++;
 		}
 	}
@@ -598,48 +719,16 @@ void refreshScreen(teks L, int line, int collumns)
 	printf(CSI "30;36H");
 	printf("%d", collumns);
 	
+	printf(CSI "30;58H");
+	printf("                                                              ");
+	
 	printf(CSI "?25h");
-}
-
-
-void refreshTeks_scrolling(teks L, int max_line, int max_collumns)
-{
-	int min_line = max_line - 25;
-	int min_collumns = max_collumns - 121;
-	
-	address pos, move;
-	
-	pos = First(L);
-	move = pos;
-	
-	SetCP(2, 0);
-	
-	if( min_line > 25 )
-	{
-		min_line = min_line - 25;
-	}
-	
-	for(int i = 0; i< min_line - 1; i++)
-		pos = Down(pos);
-	
-	move = pos;
-	
-	if( min_collumns > 121 )
-	{
-		min_collumns = max_collumns - 121;
-	}
-	
-	for(int i = 0; i<25;i++)
-	{
-		
-	}
-	
 }
 
 void refreshBlank()
 {
 	printf(CSI "?25l");
-	for(int i = 2; i < 28; i++)
+	for(int i = 2; i < 29; i++)
 	{
 		printf(CSI "%d;1H", i);
     	printf(CSI "K"); // clear the line
@@ -708,7 +797,7 @@ void tampilan(int line, int collumns)
 	system("cls");
 	SetCP(0,0);
 	
-	printf("|  MENU [CTRL + T] 	|	 HELP [CTRL + G] 	|	 EXIT [CTRL + E]  |\n");
+	printf("|  MENU [CTRL + T] 	|	 HELP [CTRL + G] 	|	 EXIT [CTRL + Q]  |\n");
 
 	SetCP(0, 29);
 	printf("Line :          |       Collumns :          ");
@@ -750,8 +839,10 @@ void openFile(char *fname, teks *L, int *col, int *line)
 	
 	fp = fopen(fname,"r"); //open file
 	if (fp == NULL)
-		printf("Error in opening file");
-		
+	{
+		printf("File tidak dapat dibuka");
+		SetCP(2,0);
+	}	
 	do {
 		c = fgetc(fp); //baca file 1 karakter
 		if ( feof(fp) ) {
@@ -772,15 +863,6 @@ void openFile(char *fname, teks *L, int *col, int *line)
 	}while(1);
 	
 	fclose(fp);
-}
-
-void resetArr(char *Arr, int size)
-{
-	int i;
-	for(i=0; i<size; i++);
-	{
-		Arr[i] = NULL;
-	}
 }
 
 bool EnableVTMode()
@@ -816,7 +898,7 @@ int menu()
 	SetCP(0,1);
 	printf("________________________|");
 	SetCP(0,6);
-    printf("________________________|");
+    printf("|_______________________|");
 	int Set[] = {7,7,7,7}; // DEFAULT COLORS
     int counter = 2;
     char key;
@@ -826,19 +908,19 @@ int menu()
 
         SetCP(0,2);
         color(Set[0]);
-        printf("Open File     [CTRL + O]|");
+        printf("|Open File    [CTRL + O]|");
 
         SetCP(0,3);
         color(Set[1]);
-        printf("Save File     [CTRL + S]|");
+        printf("|Save File    [CTRL + S]|");
 
         SetCP(0,4);
         color(Set[2]);
-        printf("Save As       [CTRL + A]|");
+        printf("|Save As      [CTRL + A]|");
 
         SetCP(0,5);
         color(Set[3]);
-        printf("Back          [   ESC  ]|");
+        printf("|Back         [   ESC  ]|");
 
         key = _getch();
 
@@ -855,35 +937,27 @@ int menu()
             if(counter == 1)
             {
                 // if enter is click and highlight is on 1 the program will run the code here
-                printf("Menu Opened");
-                system("pause");
                 active = false;
                 color(7);
                 return 1;
             }
             if(counter == 2)
             {
-                printf("Menu Opened");
-            	system("pause");
 				active = false;
 				color(7);
 				return 2;
 			}
             if(counter == 3)
             {
-                printf("Menu Opened");
-            	system("pause");
 				active = false;
 				color(7);
-//				return 3;
+				return 3;
 			}
             if(counter == 4)
             {
-                printf("Menu Opened");
-            	system("pause");
 				active = false;
 				color(7);
-//				return 4;
+				return 4;
 			}
         }
         
