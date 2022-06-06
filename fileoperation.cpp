@@ -64,3 +64,39 @@ void clearlist(teks *L)
 		First(*L) = Nil;
 	}
 }
+
+void openFile(char *fname, teks *L, int *col, int *line)
+{
+	FILE *fp;
+	char c; //penampung 1 karakter pada file
+	
+	*col = 1;
+	*line = 1;
+	
+	fp = fopen(fname,"r"); //open file
+	if (fp == NULL)
+	{
+		printf("File tidak dapat dibuka");
+		SetCP(2,0);
+	}	
+	do {
+		c = fgetc(fp); //baca file 1 karakter
+		if ( feof(fp) ) {
+			break ; //kondisi ketika sudah end file keluar deri perulangan
+		} 
+		if ( c == '\n')
+		{
+			InsertNewLine(&(*L), *line, *col); //untuk menginsert new line pada file ke list dengan baris baru
+			*line = *line + 1;
+			*col = 1;
+		}
+		else
+		{
+			InsVChar(&(*L), c, *col, *line); //insert karakter pada list
+			*col = *col + 1;
+		} 
+		
+	}while(1);
+	
+	fclose(fp);
+}
