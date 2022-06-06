@@ -195,17 +195,6 @@ void refreshScreen(teks L, int line, int collumns)
 	printf(CSI "?25h");
 }
 
-void tampilan(int line, int collumns)
-{
-	system("cls");
-	SetCP(0,0);
-	
-	printf("|  MENU [CTRL + T] 	|	 HELP [CTRL + G] 	|	 EXIT [CTRL + Q]  |\n");
-
-	SetCP(0, 29);
-	printf("Line :          |       Collumns :          ");
-
-}
 
 bool EnableVTMode()
 {
@@ -228,4 +217,16 @@ bool EnableVTMode()
         return false;
     }
     return true;
+}
+
+void tampilan(int line, int collumns)
+{
+	system("cls");
+	SetCP(0,0);
+	
+	printf("|  MENU [CTRL + T] 	|	 HELP [CTRL + G] 	|	 EXIT [CTRL + Q]  |\n");
+
+	SetCP(0, 29);
+	printf("Line :          |       Collumns :          ");
+
 }
